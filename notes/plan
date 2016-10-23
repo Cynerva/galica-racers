@@ -1,0 +1,46 @@
+release 0
+| gameplay
+| | cover menu
+| | 1 driver, 1 track, time trial only
+| | multiple laps
+| | keyboard and controller
+| graphics
+| | simple
+| | camera slightly ahead of velocity vector
+| UI
+| | race time
+| | laps
+| | speedometer
+| audio
+| | engine sound scales with speed
+| simulation
+| | no gears
+| tasks
+| | prototype
+| | | add cover menu
+| | | add driver in open space
+| | | add camera
+| | | add waypoints
+| | | add win condition
+| | audio
+| | | add engine sound
+| | | add cover music
+| | | add race music
+| | graphics
+| | | add car sprite
+| | | add background
+| | | add menu graphics
+| | UI
+| | | add blank UI
+| | | add timer
+| | | add lap indicator
+| | | add speedometer
+| | polish
+| | | add pause menu
+| | | add post-victory transition
+| | | add other transitions
+| | | add controller support
+| | | tweak driving physics
+| | | tweak audio
+| | | tweak graphics
+| | release
