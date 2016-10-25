@@ -17,7 +17,8 @@ end
 
 local function draw()
   love.graphics.push()
-  love.graphics.scale(20, 20)
+  game.camera.lookAtBody(car.body)
+  game.debug.drawUnitGrid()
   car:draw()
   love.graphics.pop()
 end

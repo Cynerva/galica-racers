@@ -31,7 +31,7 @@ function game.car.new(world)
   car.update = update
   car.draw = draw
   car.body = love.physics.newBody(world, 0, 0, "dynamic")
-  local shape = love.physics.newRectangleShape(1, 1)
+  local shape = love.physics.newRectangleShape(2, 1)
   local fixture = love.physics.newFixture(car.body, shape, 1)
   car.body:setLinearDamping(1)
   return car
