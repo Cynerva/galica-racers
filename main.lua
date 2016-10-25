@@ -1,6 +1,8 @@
 game = {}
 
+require("debugtools")
 require("event")
+require("car")
 require("race")
 require("mainmenu")
 

@@ -1,9 +1,10 @@
 game.event = {}
-game.event.coroutine = nil
 
 local function runCoroutine(co)
-  game.event.coroutine = co
-  coroutine.resume(co)
+  local success,errorMessage = coroutine.resume(co)
+  if not success then
+    error(errorMessage)
+  end
 end
 
 function game.event.fork(f)
@@ -12,7 +13,7 @@ function game.event.fork(f)
 end
 
 local function wait(event)
-  table.insert(event.waiters, game.event.coroutine)
+  table.insert(event.waiters, coroutine.running())
   coroutine.yield()
 end
 
