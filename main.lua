@@ -1,6 +1,5 @@
 game = {}
 
-require("coroutines")
 require("event")
 require("race")
 require("mainmenu")
@@ -10,4 +9,4 @@ function main()
   love.event.quit()
 end
 
-game.coroutine.run(game.coroutine.new(main))
+game.event.fork(main)

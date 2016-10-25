@@ -1,15 +1,26 @@
 game.event = {}
+game.event.coroutine = nil
+
+local function runCoroutine(co)
+  game.event.coroutine = co
+  coroutine.resume(co)
+end
+
+function game.event.fork(f)
+  local co = coroutine.create(f)
+  runCoroutine(co)
+end
 
 local function wait(event)
-  table.insert(event.waiters, game.coroutine.current)
-  game.coroutine.yield()
+  table.insert(event.waiters, game.event.coroutine)
+  coroutine.yield()
 end
 
 local function trigger(event)
   local waiters = event.waiters
   event.waiters = {}
   for i,co in ipairs(waiters) do
-    game.coroutine.run(co)
+    runCoroutine(co)
   end
 end
 
