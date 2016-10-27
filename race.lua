@@ -9,14 +9,14 @@ end
 
 local function update()
   game.track.update()
-  car:update()
+  game.car.update(car)
 end
 
 local function draw()
   love.graphics.push()
   game.camera.lookAtBody(car.body)
   game.track.draw()
-  car:draw()
+  game.car.draw(car)
   love.graphics.pop()
 end
 

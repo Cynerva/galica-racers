@@ -1,6 +1,6 @@
 game.car = {}
 
-local function update(car)
+function game.car.update(car)
   local dt = love.timer.getDelta()
   local angle = car.body:getAngle()
   if love.keyboard.isDown("left") then
@@ -22,14 +22,12 @@ local function update(car)
   car.body:setLinearVelocity(dx, dy)
 end
 
-local function draw(car)
+function game.car.draw(car)
   game.debug.drawPhysicsBody(car.body)
 end
 
 function game.car.new()
   local car = {}
-  car.update = update
-  car.draw = draw
   car.body = love.physics.newBody(game.track.world, 0, 0, "dynamic")
   local shape = love.physics.newRectangleShape(2, 1)
   local fixture = love.physics.newFixture(car.body, shape, 1)
