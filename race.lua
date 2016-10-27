@@ -1,24 +1,22 @@
 game.race = {}
 
-local world = nil
+local track = nil
 local car = nil
 
 local function init()
-  love.physics.setMeter(1)
-  world = love.physics.newWorld()
-  car = game.car.new(world)
+  track = game.track.new()
+  car = game.car.new(track.world)
 end
 
 local function update()
   car:update()
-  local dt = love.timer.getDelta()
-  world:update(dt)
+  track:update()
 end
 
 local function draw()
   love.graphics.push()
   game.camera.lookAtBody(car.body)
-  game.debug.drawUnitGrid()
+  track:draw()
   car:draw()
   love.graphics.pop()
 end
