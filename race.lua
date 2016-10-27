@@ -5,6 +5,7 @@ local car = nil
 local function init()
   game.track.init()
   car = game.car.new()
+  game.camera.followCar(car)
 end
 
 local function update()
@@ -13,11 +14,9 @@ local function update()
 end
 
 local function draw()
-  love.graphics.push()
-  game.camera.lookAtBody(car.body)
+  game.camera.transform()
   game.track.draw()
   game.car.draw(car)
-  love.graphics.pop()
 end
 
 function game.race.run()
