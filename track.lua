@@ -1,19 +1,17 @@
 game.track = {}
 
-local function update(track)
-  local dt = love.timer.getDelta()
-  track.world:update(dt)
-end
+game.track.world = nil
 
-local function draw(track)
-  game.debug.drawUnitGrid()
-end
-
-function game.track.new()
-  local track = {}
-  track.update = update
-  track.draw = draw
+function game.track.init()
   love.physics.setMeter(1)
-  track.world = love.physics.newWorld()
-  return track
+  game.track.world = love.physics.newWorld()
+end
+
+function game.track.update()
+  local dt = love.timer.getDelta()
+  game.track.world:update(dt)
+end
+
+function game.track.draw()
+  game.debug.drawUnitGrid()
 end

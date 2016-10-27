@@ -1,22 +1,21 @@
 game.race = {}
 
-local track = nil
 local car = nil
 
 local function init()
-  track = game.track.new()
-  car = game.car.new(track.world)
+  game.track.init()
+  car = game.car.new()
 end
 
 local function update()
+  game.track.update()
   car:update()
-  track:update()
 end
 
 local function draw()
   love.graphics.push()
   game.camera.lookAtBody(car.body)
-  track:draw()
+  game.track.draw()
   car:draw()
   love.graphics.pop()
 end
