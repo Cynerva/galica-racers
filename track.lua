@@ -28,7 +28,7 @@ local function generateTestTrack()
   for y=1,game.track.height do
     for x=1,game.track.width do
       local tile = dirtImage
-      if x > 50 then tile = mudImage end
+      if x > 5 then tile = mudImage end
       setTile(x, y, tile)
     end
   end
@@ -74,6 +74,7 @@ function game.track.draw()
   ymin = math.floor(ymin / 4)
   xmax = math.floor(xmax / 4) + 1
   ymax = math.floor(ymax / 4) + 1
+  love.graphics.setColor(255, 255, 255)
   for y=ymin,ymax do
     for x=xmin,xmax do
       drawTile(x, y)

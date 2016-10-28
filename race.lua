@@ -1,12 +1,14 @@
 game.race = {}
 
 local car = nil
-local waypoint = nil
 
 local function init()
   game.track.init()
+  game.waypoint.init()
+  game.waypoint.add(10, 50, 20, 4)
+  game.waypoint.add(10, 100, 20, 4)
+  game.waypoint.add(10, 150, 20, 4)
   car = game.car.new()
-  waypoint = game.waypoint.new(20, 200, 40, 4)
   game.camera.followCar(car)
 end
 
@@ -26,5 +28,5 @@ function game.race.run()
   init()
   love.update = update
   love.draw = draw
-  game.waypoint.hitWaypoint:wait()
+  game.waypoint.finishedLap:wait()
 end

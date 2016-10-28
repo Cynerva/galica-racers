@@ -27,6 +27,7 @@ function game.car.update(car)
 end
 
 function game.car.draw(car)
+  game.debug.wireBrush()
   game.debug.drawPhysicsBody(car.body)
 end
 

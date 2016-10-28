@@ -11,13 +11,12 @@ local function drawPhysicsShape(shape)
   end
 end
 
-local function setDebugBrush()
+function game.debug.wireBrush()
   love.graphics.setLineWidth(0.1)
   love.graphics.setColor(192, 192, 192)
 end
 
 function game.debug.drawUnitGrid()
-  setDebugBrush()
   for y=-10,10 do
     for x=-10,10 do
       love.graphics.rectangle("line", x, y, 1, 1)
@@ -29,7 +28,6 @@ function game.debug.drawPhysicsBody(body)
   love.graphics.push()
   love.graphics.translate(body:getPosition())
   love.graphics.rotate(body:getAngle())
-  setDebugBrush()
   for i,fixture in ipairs(body:getFixtureList()) do
     local shape = fixture:getShape()
     drawPhysicsShape(shape)
