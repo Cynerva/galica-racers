@@ -14,15 +14,16 @@ function game.car.update(car)
     accel = -10 * dt
   end
   if love.keyboard.isDown("left") then
-    angle = angle - math.max(math.min(speed / 2, 3), -3) * dt
+    car.body:setAngularVelocity(-math.max(math.min(speed / 2, 3), -3))
   elseif love.keyboard.isDown("right") then
-    angle = angle + math.max(math.min(speed / 2, 3), -3) * dt
+    car.body:setAngularVelocity(math.max(math.min(speed / 2, 3), -3))
+  else
+    car.body:setAngularVelocity(0)
   end
   speed = speed + accel
   dx = speed * ux
   dy = speed * uy
   car.body:setLinearVelocity(dx, dy)
-  car.body:setAngle(angle)
 end
 
 function game.car.draw(car)

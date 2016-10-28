@@ -5,6 +5,7 @@ require("event")
 require("camera")
 require("track")
 require("car")
+require("waypoint")
 require("race")
 require("mainmenu")
 

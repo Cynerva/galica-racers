@@ -4,6 +4,8 @@ game.track.width = nil
 game.track.height = nil
 game.track.tiles = nil
 game.track.world = nil
+game.track.beginCollision = game.event.new()
+game.track.endCollision = game.event.new()
 
 local dirtImage = love.graphics.newImage("tiles/dirt.png")
 local mudImage = love.graphics.newImage("tiles/mud.png")
@@ -36,6 +38,18 @@ function game.track.init()
   generateTestTrack()
   love.physics.setMeter(1)
   game.track.world = love.physics.newWorld()
+  game.track.world:setCallbacks(
+    function(a, b)
+      a = a:getUserData() or {}
+      b = b:getUserData() or {}
+      game.track.beginCollision:send(a, b)
+    end,
+    function(a, b)
+      a = a:getUserData()
+      b = b:getUserData()
+      game.track.endCollision:send(a, b)
+    end
+  )
 end
 
 function game.track.update()

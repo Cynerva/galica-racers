@@ -29,14 +29,15 @@ local function keypressed(key)
   elseif key == "down" then
     moveDown()
   elseif key == "return" then
-    select:trigger()
+    select:send()
   end
 end
 
 function game.mainMenu.run()
-  love.draw = draw
-  love.keypressed = keypressed
   while true do
+    love.draw = draw
+    love.keypressed = keypressed
+    cursor = 0
     select:wait()
     local selection = options[cursor + 1]
     if selection == "Play" then
