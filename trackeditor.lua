@@ -1,8 +1,11 @@
 game.trackEditor = {}
 
+local posX = 0
+local posY = 0
+
 local function init()
   game.track.init()
-  game.camera.setPosition(0, 0)
+  game.camera.setPosition(game.tiles.worldPos(0, 0))
 end
 
 local function update()
