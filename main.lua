@@ -3,6 +3,7 @@ game = {}
 require("debugtools")
 require("event")
 require("camera")
+require("tiles")
 require("track")
 require("car")
 require("waypoint")
