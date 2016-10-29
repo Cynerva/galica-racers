@@ -33,7 +33,7 @@ end
 
 function game.car.new()
   local car = {}
-  car.body = love.physics.newBody(game.track.world, 0, 0, "dynamic")
+  car.body = love.physics.newBody(game.track.world, 8, 8, "dynamic")
   local shape = love.physics.newRectangleShape(2, 1)
   local fixture = love.physics.newFixture(car.body, shape, 1)
   car.body:setLinearDamping(0.5)

@@ -23,14 +23,27 @@ function game.tiles.loadTestMap()
   width = 100
   height = 100
   tileMap = {}
-  for y=1,width do
-    for x=1,height do
+  for y=1,height do
+    for x=1,width do
       if x == 1 or x == width or y == 1 or y == height then
         game.tiles.setTile(x, y, game.tiles.rock)
       elseif x > 5 then
         game.tiles.setTile(x, y, game.tiles.mud)
       else
         game.tiles.setTile(x, y, game.tiles.dirt)
+      end
+    end
+  end
+  game.tiles.setTile(20, 20, game.tiles.rock)
+end
+
+function game.tiles.addPhysics(world)
+  for y=1,height do
+    for x=1,width do
+      if game.tiles.getTile(x, y) == game.tiles.rock then
+        local body = love.physics.newBody(world, (x - 0.5) * 4, (y - 0.5) * 4)
+        local shape = love.physics.newRectangleShape(4, 4)
+        local fixture = love.physics.newFixture(body, shape, 1)
       end
     end
   end
