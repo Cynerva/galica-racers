@@ -9,6 +9,7 @@ game.track.endCollision = game.event.new()
 
 local dirtImage = love.graphics.newImage("tiles/dirt.png")
 local mudImage = love.graphics.newImage("tiles/mud.png")
+local rockImage = love.graphics.newImage("tiles/rock.png")
 
 local function setTile(x, y, value)
   game.track.tiles[y * game.track.width + x] = value
@@ -27,9 +28,13 @@ local function generateTestTrack()
   game.track.tiles = {}
   for y=1,game.track.height do
     for x=1,game.track.width do
-      local tile = dirtImage
-      if x > 5 then tile = mudImage end
-      setTile(x, y, tile)
+      if x == 1 or x == game.track.width or y == 1 or y == game.track.height then
+        setTile(x, y, rockImage)
+      elseif x > 5 then
+        setTile(x, y, mudImage)
+      else
+        setTile(x, y, dirtImage)
+      end
     end
   end
 end
