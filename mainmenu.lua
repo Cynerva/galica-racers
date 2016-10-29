@@ -1,6 +1,6 @@
 game.mainMenu = {}
 
-local options = {"Play", "Quit"}
+local options = {"Play", "Track Editor", "Quit"}
 local cursor = 0
 local select = game.event.new()
 
@@ -29,7 +29,7 @@ local function keypressed(key)
   elseif key == "down" then
     moveDown()
   elseif key == "return" then
-    select:send()
+    select:send(options[cursor + 1])
   end
 end
 
@@ -38,10 +38,11 @@ function game.mainMenu.run()
     love.draw = draw
     love.keypressed = keypressed
     cursor = 0
-    select:wait()
-    local selection = options[cursor + 1]
+    local selection = select:wait()
     if selection == "Play" then
       game.race.run()
+    elseif selection == "Track Editor" then
+      game.trackEditor.run()
     elseif selection == "Quit" then
       return
     else

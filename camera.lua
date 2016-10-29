@@ -1,18 +1,29 @@
 game.camera = {}
 
-local body = nil
+local followedBody = nil
+local posX = 0
+local posY = 0
 local zoom = 20
 
 function game.camera.followCar(car)
-  body = car.body
+  followedBody = car.body
+end
+
+function game.camera.setPosition(x, y)
+  followedBody = nil
+  posX = x
+  posY = y
 end
 
 local function cameraPos()
-  local x, y = body:getPosition()
-  local dx, dy = body:getLinearVelocity()
-  x = x + dx / 4
-  y = y + dy / 4
-  return x, y
+  if followedBody then
+    local x, y = followedBody:getPosition()
+    local dx, dy = followedBody:getLinearVelocity()
+    x = x + dx / 4
+    y = y + dy / 4
+    return x, y
+  end
+  return posX, posY
 end
 
 function game.camera.transform()

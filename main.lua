@@ -8,6 +8,7 @@ require("track")
 require("car")
 require("waypoint")
 require("race")
+require("trackeditor")
 require("mainmenu")
 
 function main()
