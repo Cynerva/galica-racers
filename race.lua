@@ -4,10 +4,6 @@ local car = nil
 
 local function init()
   game.track.init()
-  game.waypoint.init()
-  game.waypoint.add(10, 50, 20, 4)
-  game.waypoint.add(10, 100, 20, 4)
-  game.waypoint.add(10, 150, 20, 4)
   car = game.car.new()
   game.camera.followCar(car)
 end
@@ -20,7 +16,6 @@ end
 local function draw()
   game.camera.transform()
   game.track.draw()
-  game.waypoint.draw(waypoint)
   game.car.draw(car)
 end
 

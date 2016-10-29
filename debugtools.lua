@@ -13,7 +13,7 @@ end
 
 function game.debug.wireBrush()
   love.graphics.setLineWidth(0.1)
-  love.graphics.setColor(192, 192, 192)
+  love.graphics.setColor(255, 255, 255)
 end
 
 function game.debug.drawUnitGrid()
@@ -33,4 +33,10 @@ function game.debug.drawPhysicsBody(body)
     drawPhysicsShape(shape)
   end
   love.graphics.pop()
+end
+
+function game.debug.drawPhysicsWorld(world)
+  for i,body in ipairs(world:getBodyList()) do
+    game.debug.drawPhysicsBody(body)
+  end
 end

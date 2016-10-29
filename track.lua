@@ -21,6 +21,11 @@ function game.track.init()
   )
   game.tiles.loadTestMap()
   game.tiles.addPhysics(game.track.world)
+  game.waypoint.init()
+  game.waypoint.add(10, 98, 20, 4)
+  game.waypoint.add(10, 198, 20, 4)
+  game.waypoint.add(10, 298, 20, 4)
+  game.waypoint.add(10, 398, 20, 4)
 end
 
 function game.track.update()
@@ -30,4 +35,7 @@ end
 
 function game.track.draw()
   game.tiles.draw()
+  game.debug.wireBrush()
+  game.debug.drawPhysicsWorld(game.track.world)
+  game.waypoint.draw(waypoint)
 end
