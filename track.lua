@@ -4,7 +4,33 @@ game.track.world = nil
 game.track.beginCollision = game.event.new()
 game.track.endCollision = game.event.new()
 
-local function initWorld()
+function game.track.reset()
+  game.track.world = nil
+end
+
+function game.track.save()
+  local f = love.filesystem.newFile("track")
+  f:open("w")
+  game.tiles.write(f)
+  f:close()
+end
+
+function game.track.load()
+  if love.filesystem.exists("track") then
+    local f = love.filesystem.newFile("track")
+    f:open("r")
+    game.tiles.read(f)
+    f:close()
+  else
+    game.tiles.newEmptyMap()
+  end
+  game.waypoint.reset()
+  game.waypoint.add(1, 5, 5)
+  game.waypoint.add(2, 10, 10)
+  game.waypoint.add(3, 15, 15)
+end
+
+function game.track.addPhysics()
   love.physics.setMeter(1)
   game.track.world = love.physics.newWorld()
   game.track.world:setCallbacks(
@@ -20,26 +46,7 @@ local function initWorld()
     end
   )
   game.tiles.addPhysics(game.track.world)
-end
-
-function game.track.save()
-  local f = love.filesystem.newFile("track")
-  f:open("w")
-  game.tiles.write(f)
-  f:close()
-end
-
-function game.track.load()
-  local f = love.filesystem.newFile("track")
-  f:open("r")
-  game.tiles.read(f)
-  f:close()
-  initWorld()
-  game.waypoint.init()
-  game.waypoint.add(8, 96, 20, 4)
-  game.waypoint.add(8, 196, 20, 4)
-  game.waypoint.add(8, 296, 20, 4)
-  game.waypoint.add(8, 396, 20, 4)
+  game.waypoint.addPhysics(game.track.world)
 end
 
 function game.track.update()
@@ -50,6 +57,6 @@ end
 function game.track.draw()
   game.tiles.draw()
   game.debug.wireBrush()
-  game.debug.drawPhysicsWorld(game.track.world)
+  --game.debug.drawPhysicsWorld(game.track.world)
   game.waypoint.draw(waypoint)
 end

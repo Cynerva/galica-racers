@@ -1,10 +1,11 @@
 game.tiles = {}
 
+local tileSize = 4
+
+game.tiles.tileSize = tileSize
 game.tiles.dirt = love.graphics.newImage("tiles/dirt.png")
 game.tiles.mud = love.graphics.newImage("tiles/mud.png")
 game.tiles.rock = love.graphics.newImage("tiles/rock.png")
-
-local tileSize = 4
 
 local width = nil
 local height = nil
@@ -19,6 +20,17 @@ end
 
 function game.tiles.setTile(x, y, tile)
   tileMap[y * width + x] = tile
+end
+
+function game.tiles.newEmptyMap()
+  width = 100
+  height = 100
+  tileMap = {}
+  for y=1,height do
+    for x=1,width do
+      game.tiles.setTile(x, y, game.tiles.rock)
+    end
+  end
 end
 
 function game.tiles.write(file)

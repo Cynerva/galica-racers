@@ -2,12 +2,6 @@ game.race = {}
 
 local car = nil
 
-local function init()
-  game.track.load()
-  car = game.car.new()
-  game.camera.followCar(car)
-end
-
 local function update()
   game.track.update()
   game.car.update(car)
@@ -20,8 +14,12 @@ local function draw()
 end
 
 function game.race.run()
-  init()
   love.update = update
   love.draw = draw
+  game.track.reset()
+  game.track.load()
+  game.track.addPhysics()
+  car = game.car.new()
+  game.camera.followCar(car)
   game.waypoint.finishedLap:wait()
 end

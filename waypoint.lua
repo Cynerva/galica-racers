@@ -4,32 +4,42 @@ game.waypoint.finishedLap = game.event.new()
 
 local waypoints = nil
 local nextId = nil
+local maxId = nil
 
-function game.waypoint.init()
+function game.waypoint.reset()
   waypoints = {}
   nextId = 1
+  maxId = -1
 end
 
-function game.waypoint.add(x, y, width, height)
-  local waypoint = {}
-  waypoint.body = love.physics.newBody(game.track.world, x, y)
-  local shape = love.physics.newRectangleShape(width, height)
-  local fixture = love.physics.newFixture(waypoint.body, shape, 1)
-  fixture:setSensor(true)
-  fixture:setUserData{isWaypoint = true, id = #waypoints + 1}
+function game.waypoint.add(id, x, y)
+  local waypoint = {id=id, x=x, y=y}
   table.insert(waypoints, waypoint)
+  if id > maxId then maxId = id end
 end
 
--- TODO: waypoints should have nothing to draw
--- this should be part of the tiles instead
+function game.waypoint.addPhysics(world)
+  local shape = love.physics.newRectangleShape(game.tiles.tileSize, game.tiles.tileSize)
+  for i,waypoint in ipairs(waypoints) do
+    local body = love.physics.newBody(world, game.tiles.worldPos(waypoint.x, waypoint.y))
+    local fixture = love.physics.newFixture(body, shape, 1)
+    fixture:setSensor(true)
+    fixture:setUserData{isWaypoint=true, id=waypoint.id}
+  end
+end
+
 function game.waypoint.draw()
   for i,waypoint in ipairs(waypoints) do
-    if i == nextId then
+    if waypoint.id == nextId then
       love.graphics.setColor(0, 255, 0)
     else
       love.graphics.setColor(255, 0, 0)
     end
-    game.debug.drawPhysicsBody(waypoint.body)
+    love.graphics.push()
+    love.graphics.translate(game.tiles.worldPos(waypoint.x, waypoint.y))
+    love.graphics.translate(-game.tiles.tileSize / 2, -game.tiles.tileSize / 2)
+    love.graphics.rectangle("line", 0, 0, 4, 4)
+    love.graphics.pop()
   end
 end
 
@@ -38,7 +48,7 @@ local function watchCollisions()
     local a, b = game.track.beginCollision:wait()
     if a.isWaypoint and a.id == nextId or b.isWaypoint and b.id == nextId then
       nextId = nextId + 1
-      if nextId > #waypoints then
+      if nextId > maxId then
         nextId = 1
         game.waypoint.finishedLap:send()
       end

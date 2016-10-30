@@ -5,11 +5,6 @@ local posX = 1
 local posY = 1
 local finished = game.event.new()
 
-local function init()
-  game.track.load()
-  game.camera.setPosition(game.tiles.worldPos(posX, posY))
-end
-
 local function update()
   if love.keyboard.isDown("1") then
     game.tiles.setTile(posX, posY, game.tiles.dirt)
@@ -42,10 +37,12 @@ local function keypressed(key)
 end
 
 function game.trackEditor.run()
-  init()
   love.update = update
   love.draw = draw
   love.keypressed = keypressed
+  game.track.reset()
+  game.track.load()
+  game.camera.setPosition(game.tiles.worldPos(posX, posY))
   finished:wait()
   game.track.save()
 end
