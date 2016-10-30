@@ -18,6 +18,25 @@ function game.waypoint.add(id, x, y)
   if id > maxId then maxId = id end
 end
 
+function game.waypoint.read(f)
+  local count = f:read(1):byte()
+  for i=1,count do
+    local id = f:read(1):byte()
+    local x = f:read(1):byte()
+    local y = f:read(1):byte()
+    game.waypoint.add(id, x, y)
+  end
+end
+
+function game.waypoint.write(f)
+  f:write(string.char(#waypoints))
+  for i,waypoint in ipairs(waypoints) do
+    f:write(string.char(waypoint.id))
+    f:write(string.char(waypoint.x))
+    f:write(string.char(waypoint.y))
+  end
+end
+
 function game.waypoint.addPhysics(world)
   local shape = love.physics.newRectangleShape(game.tiles.tileSize, game.tiles.tileSize)
   for i,waypoint in ipairs(waypoints) do

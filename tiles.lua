@@ -22,7 +22,7 @@ function game.tiles.setTile(x, y, tile)
   tileMap[y * width + x] = tile
 end
 
-function game.tiles.newEmptyMap()
+function game.tiles.reset()
   width = 100
   height = 100
   tileMap = {}

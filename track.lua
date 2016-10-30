@@ -6,28 +6,27 @@ game.track.endCollision = game.event.new()
 
 function game.track.reset()
   game.track.world = nil
+  game.tiles.reset()
+  game.waypoint.reset()
 end
 
 function game.track.save()
   local f = love.filesystem.newFile("track")
   f:open("w")
   game.tiles.write(f)
+  game.waypoint.write(f)
   f:close()
 end
 
 function game.track.load()
+  game.track.reset()
   if love.filesystem.exists("track") then
     local f = love.filesystem.newFile("track")
     f:open("r")
     game.tiles.read(f)
+    game.waypoint.read(f)
     f:close()
-  else
-    game.tiles.newEmptyMap()
   end
-  game.waypoint.reset()
-  game.waypoint.add(1, 5, 5)
-  game.waypoint.add(2, 10, 10)
-  game.waypoint.add(3, 15, 15)
 end
 
 function game.track.addPhysics()

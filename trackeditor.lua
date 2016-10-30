@@ -6,11 +6,11 @@ local posY = 1
 local finished = game.event.new()
 
 local function update()
-  if love.keyboard.isDown("1") then
+  if love.keyboard.isDown("q") then
     game.tiles.setTile(posX, posY, game.tiles.dirt)
-  elseif love.keyboard.isDown("2") then
+  elseif love.keyboard.isDown("w") then
     game.tiles.setTile(posX, posY, game.tiles.mud)
-  elseif love.keyboard.isDown("3") then
+  elseif love.keyboard.isDown("e") then
     game.tiles.setTile(posX, posY, game.tiles.rock)
   end
 end
@@ -32,6 +32,13 @@ local function keypressed(key)
   elseif key == "escape" then
     finished:send()
     return
+  elseif key == "c" then
+    game.waypoint.reset()
+  else
+    local num = tonumber(key)
+    if num ~= nil then
+      game.waypoint.add(num, posX, posY)
+    end
   end
   game.camera.setPosition(game.tiles.worldPos(posX, posY))
 end
@@ -40,7 +47,6 @@ function game.trackEditor.run()
   love.update = update
   love.draw = draw
   love.keypressed = keypressed
-  game.track.reset()
   game.track.load()
   game.camera.setPosition(game.tiles.worldPos(posX, posY))
   finished:wait()

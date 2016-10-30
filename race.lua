@@ -16,7 +16,6 @@ end
 function game.race.run()
   love.update = update
   love.draw = draw
-  game.track.reset()
   game.track.load()
   game.track.addPhysics()
   car = game.car.new()
