@@ -58,6 +58,8 @@ function game.waypoint.draw()
     love.graphics.translate(game.tiles.worldPos(waypoint.x, waypoint.y))
     love.graphics.translate(-game.tiles.tileSize / 2, -game.tiles.tileSize / 2)
     love.graphics.rectangle("line", 0, 0, 4, 4)
+    love.graphics.scale(0.2, 0.2)
+    love.graphics.print(tostring(waypoint.id), 0, 0)
     love.graphics.pop()
   end
 end
