@@ -12,7 +12,7 @@ local height = nil
 local tileMap = nil
 
 function game.tiles.getTile(x, y)
-  if x < 1 or x > width or y < 1 or y > height then
+  if x < 0 or x >= width or y < 0 or y >= height then
     return game.tiles.rock
   end
   return tileMap[y * width + x]
@@ -26,8 +26,8 @@ function game.tiles.reset()
   width = 100
   height = 100
   tileMap = {}
-  for y=1,height do
-    for x=1,width do
+  for y=0,height-1 do
+    for x=0,width-1 do
       game.tiles.setTile(x, y, game.tiles.rock)
     end
   end
@@ -36,8 +36,8 @@ end
 function game.tiles.write(file)
   file:write(string.char(width))
   file:write(string.char(height))
-  for y=1,height do
-    for x=1,width do
+  for y=0,height-1 do
+    for x=0,width-1 do
       local tile = game.tiles.getTile(x, y)
       if tile == game.tiles.dirt then
         file:write(string.char(0))
@@ -54,8 +54,8 @@ function game.tiles.read(file)
   width = file:read(1):byte()
   height = file:read(1):byte()
   tileMap = {}
-  for y=1,height do
-    for x=1,width do
+  for y=0,height-1 do
+    for x=0,width-1 do
       local tileId = file:read(1):byte()
       if tileId == 0 then
         game.tiles.setTile(x, y, game.tiles.dirt)
@@ -69,10 +69,10 @@ function game.tiles.read(file)
 end
 
 function game.tiles.addPhysics(world)
-  for y=0,height+1 do
-    for x=0,width+1 do
+  for y=-1,height do
+    for x=-1,width do
       if game.tiles.getTile(x, y) == game.tiles.rock then
-        local body = love.physics.newBody(world, (x - 1) * tileSize, (y - 1) * tileSize)
+        local body = love.physics.newBody(world, x * tileSize, y * tileSize)
         local shape = love.physics.newRectangleShape(tileSize, tileSize)
         local fixture = love.physics.newFixture(body, shape, 1)
       end
@@ -81,7 +81,7 @@ function game.tiles.addPhysics(world)
 end
 
 function game.tiles.worldPos(x, y)
-  return tileSize * (x - 1), tileSize * (y - 1)
+  return tileSize * x, tileSize * y
 end
 
 local function drawTile(x, y)
@@ -97,10 +97,10 @@ end
 function game.tiles.draw()
   local xmin, ymin = game.camera.screenToWorld(0, 0)
   local xmax, ymax = game.camera.screenToWorld(love.graphics.getWidth(), love.graphics.getHeight())
-  xmin = math.floor(xmin / tileSize) + 1
-  ymin = math.floor(ymin / tileSize) + 1
-  xmax = math.floor(xmax / tileSize) + 2
-  ymax = math.floor(ymax / tileSize) + 2
+  xmin = math.floor(xmin / tileSize)
+  ymin = math.floor(ymin / tileSize)
+  xmax = math.floor(xmax / tileSize) + 1
+  ymax = math.floor(ymax / tileSize) + 1
   love.graphics.setColor(255, 255, 255)
   for y=ymin,ymax do
     for x=xmin,xmax do
