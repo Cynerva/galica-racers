@@ -1,8 +1,8 @@
 game.trackEditor = {}
 
 -- tile coordinates
-local posX = 1
-local posY = 1
+local posX = 0
+local posY = 0
 local finished = game.event.new()
 
 local function update()
