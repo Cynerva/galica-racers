@@ -6,7 +6,7 @@ local posY = 1
 local finished = game.event.new()
 
 local function init()
-  game.track.init()
+  game.track.load()
   game.camera.setPosition(game.tiles.worldPos(posX, posY))
 end
 
@@ -47,4 +47,5 @@ function game.trackEditor.run()
   love.draw = draw
   love.keypressed = keypressed
   finished:wait()
+  game.track.save()
 end

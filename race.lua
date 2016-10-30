@@ -3,7 +3,7 @@ game.race = {}
 local car = nil
 
 local function init()
-  game.track.init()
+  game.track.load()
   car = game.car.new()
   game.camera.followCar(car)
 end

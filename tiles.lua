@@ -21,20 +21,39 @@ function game.tiles.setTile(x, y, tile)
   tileMap[y * width + x] = tile
 end
 
-function game.tiles.loadTestMap()
-  width = 100
-  height = 100
-  tileMap = {}
+function game.tiles.write(file)
+  file:write(string.char(width))
+  file:write(string.char(height))
   for y=1,height do
     for x=1,width do
-      if x > 5 then
-        game.tiles.setTile(x, y, game.tiles.mud)
-      else
-        game.tiles.setTile(x, y, game.tiles.dirt)
+      local tile = game.tiles.getTile(x, y)
+      if tile == game.tiles.dirt then
+        file:write(string.char(0))
+      elseif tile == game.tiles.mud then
+        file:write(string.char(1))
+      elseif tile == game.tiles.rock then
+        file:write(string.char(2))
       end
     end
   end
-  game.tiles.setTile(20, 20, game.tiles.rock)
+end
+
+function game.tiles.read(file)
+  width = file:read(1):byte()
+  height = file:read(1):byte()
+  tileMap = {}
+  for y=1,height do
+    for x=1,width do
+      local tileId = file:read(1):byte()
+      if tileId == 0 then
+        game.tiles.setTile(x, y, game.tiles.dirt)
+      elseif tileId == 1 then
+        game.tiles.setTile(x, y, game.tiles.mud)
+      elseif tileId == 2 then
+        game.tiles.setTile(x, y, game.tiles.rock)
+      end
+    end
+  end
 end
 
 function game.tiles.addPhysics(world)
