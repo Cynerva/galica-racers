@@ -34,6 +34,8 @@ local function keypressed(key)
     return
   elseif key == "c" then
     game.waypoint.reset()
+  elseif key == "s" then
+    game.track.setSpawn(posX, posY)
   else
     local num = tonumber(key)
     if num ~= nil then
