@@ -33,9 +33,7 @@ end
 
 function game.car.new()
   local car = {}
-  local x, y = game.track.getSpawn()
-  local x = x * game.tiles.tileSize
-  local y = y * game.tiles.tileSize
+  local x, y = game.track.getWorldSpawn()
   car.body = love.physics.newBody(game.track.world, x, y, "dynamic")
   local shape = love.physics.newRectangleShape(2, 1)
   local fixture = love.physics.newFixture(car.body, shape, 1)

@@ -38,8 +38,8 @@ function game.track.load()
   end
 end
 
-function game.track.getSpawn()
-  return spawnX, spawnY
+function game.track.getWorldSpawn()
+  return game.tiles.worldPos(spawnX, spawnY)
 end
 
 function game.track.setSpawn(x, y)
@@ -73,7 +73,7 @@ end
 
 local function drawSpawn()
   love.graphics.push()
-  love.graphics.translate(game.tiles.worldPos(spawnX, spawnY))
+  love.graphics.translate(game.track.getWorldSpawn())
   love.graphics.translate(-game.tiles.tileSize / 2, -game.tiles.tileSize / 2)
   love.graphics.rectangle("line", 0, 0, game.tiles.tileSize, game.tiles.tileSize)
   love.graphics.scale(0.2, 0.2)
