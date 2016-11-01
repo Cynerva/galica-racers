@@ -1,6 +1,21 @@
-game.car = {}
+game.cars = {}
 
-function game.car.update(car)
+local car = nil
+
+function game.cars.getBody()
+  return car.body
+end
+
+function game.cars.reset()
+  car = {}
+  local x, y = game.track.getWorldSpawn()
+  car.body = love.physics.newBody(game.track.world, x, y, "dynamic")
+  local shape = love.physics.newRectangleShape(2, 1)
+  local fixture = love.physics.newFixture(car.body, shape, 1)
+  car.body:setLinearDamping(0.5)
+end
+
+function game.cars.update()
   local dt = love.timer.getDelta()
   local angle = car.body:getAngle()
   local dx, dy = car.body:getLinearVelocity()
@@ -26,17 +41,8 @@ function game.car.update(car)
   car.body:setLinearVelocity(dx, dy)
 end
 
-function game.car.draw(car)
+function game.cars.draw()
   game.debug.wireBrush()
   game.debug.drawPhysicsBody(car.body)
 end
 
-function game.car.new()
-  local car = {}
-  local x, y = game.track.getWorldSpawn()
-  car.body = love.physics.newBody(game.track.world, x, y, "dynamic")
-  local shape = love.physics.newRectangleShape(2, 1)
-  local fixture = love.physics.newFixture(car.body, shape, 1)
-  car.body:setLinearDamping(0.5)
-  return car
-end

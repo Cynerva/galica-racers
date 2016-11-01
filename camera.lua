@@ -5,8 +5,8 @@ local posX = 0
 local posY = 0
 local zoom = 20
 
-function game.camera.followCar(car)
-  followedBody = car.body
+function game.camera.followCar()
+  followedBody = game.cars.getBody()
 end
 
 function game.camera.setPosition(x, y)
