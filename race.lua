@@ -18,5 +18,5 @@ function game.race.run()
   game.track.addPhysics()
   game.cars.reset()
   game.camera.followCar()
-  game.waypoint.finishedLap:wait()
+  game.event.new():wait()
 end
