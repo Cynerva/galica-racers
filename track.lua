@@ -8,21 +8,21 @@ function game.track.reset()
   game.track.world = nil
 end
 
-function game.track.save()
-  local f = love.filesystem.newFile("track")
-  f:open("w")
-  -- TODO: write stuff
-  f:close()
-end
-
 function game.track.load()
   game.track.reset()
   if love.filesystem.exists("track") then
     local f = love.filesystem.newFile("track")
     f:open("r")
-    -- TODO: read stuff
+    game.terrain.read(f)
     f:close()
   end
+end
+
+function game.track.save()
+  local f = love.filesystem.newFile("track")
+  f:open("w")
+  game.terrain.write(f)
+  f:close()
 end
 
 function game.track.addPhysics()
@@ -48,7 +48,7 @@ function game.track.update()
 end
 
 function game.track.draw()
+  game.terrain.draw()
   game.debug.wireBrush()
-  game.debug.drawUnitGrid()
   --game.debug.drawPhysicsWorld(game.track.world)
 end
