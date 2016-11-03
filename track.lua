@@ -6,6 +6,7 @@ game.track.endCollision = game.event.new()
 
 function game.track.reset()
   game.track.world = nil
+  game.terrain.reset()
 end
 
 function game.track.load()

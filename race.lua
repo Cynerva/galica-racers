@@ -13,7 +13,7 @@ end
 
 function game.race.run()
   love.update = update
-  love.draw = draw
+  game.ui.setPane({draw=draw})
   game.track.load()
   game.track.addPhysics()
   game.cars.reset()

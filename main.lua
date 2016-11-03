@@ -2,6 +2,7 @@ game = {}
 
 require("debugtools")
 require("event")
+require("ui")
 require("camera")
 require("terrain")
 require("track")

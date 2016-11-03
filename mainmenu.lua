@@ -11,7 +11,7 @@ local function draw()
     else
       love.graphics.setColor(128, 128, 128)
     end
-    love.graphics.printf(text, 0, 200 + 50 * i, love.graphics.getWidth(), "center")
+    love.graphics.printf(text, 0, 200 + 50 * i, game.ui.width, "center")
   end
 end
 
@@ -35,7 +35,7 @@ end
 
 function game.mainMenu.run()
   while true do
-    love.draw = draw
+    game.ui.setPane({draw=draw})
     love.keypressed = keypressed
     cursor = 0
     local selection = select:wait()
