@@ -35,8 +35,8 @@ end
 
 function game.mainMenu.run()
   while true do
-    game.ui.setView({draw=draw})
     love.keypressed = keypressed
+    love.draw = draw
     cursor = 0
     local selection = select:wait()
     if selection == "Play" then
