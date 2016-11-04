@@ -37,7 +37,7 @@ end
 
 function game.terrain.draw()
   local minX, minY = worldToTile(game.camera.screenToWorld(0, 0))
-  local maxX, maxY = worldToTile(game.camera.screenToWorld(love.graphics.getDimensions()))
+  local maxX, maxY = worldToTile(game.camera.screenToWorld(game.ui.width, game.ui.height))
   minX = math.floor(minX)
   minY = math.floor(minY)
   maxX = math.floor(maxX)
