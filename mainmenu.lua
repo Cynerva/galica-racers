@@ -35,7 +35,7 @@ end
 
 function game.mainMenu.run()
   while true do
-    game.ui.setPane({draw=draw})
+    game.ui.setView({draw=draw})
     love.keypressed = keypressed
     cursor = 0
     local selection = select:wait()

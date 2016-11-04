@@ -2,7 +2,7 @@ game.trackEditor = {}
 
 local finished = game.event.new()
 
-local pane = game.ui.split(2/3,
+local view = game.ui.split(2/3,
   game.ui.pane({draw=function()
     game.camera.transform()
     game.track.draw()
@@ -40,7 +40,7 @@ end
 
 function game.trackEditor.run()
   love.update = update
-  game.ui.setPane(pane)
+  game.ui.setView(view)
   love.keypressed = keypressed
   game.track.load()
   finished:wait()

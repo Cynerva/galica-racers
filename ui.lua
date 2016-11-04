@@ -1,24 +1,24 @@
 game.ui = {}
 
-local rootPane = nil
-
 game.ui.width = nil
 game.ui.height = nil
 game.ui.clickX = nil
 game.ui.clickY = nil
 
-function game.ui.pane(args)
-  return {draw=args.draw, click=args.click or function() end}
+local view = nil
+
+function game.ui.setView(v)
+  view = v
 end
 
-function game.ui.setPane(pane)
-  rootPane = pane
+function game.ui.pane(args)
+  return {draw=args.draw, click=args.click or function() end}
 end
 
 function love.draw()
   game.ui.width = love.graphics.getWidth()
   game.ui.height = love.graphics.getHeight()
-  rootPane.draw()
+  view.draw()
 end
 
 function love.mousepressed(x, y)
@@ -26,7 +26,7 @@ function love.mousepressed(x, y)
   game.ui.height = love.graphics.getHeight()
   game.ui.clickX = x
   game.ui.clickY = y
-  rootPane.click()
+  view.click()
 end
 
 local function drawHorizontalSplit(weight, left, right)
