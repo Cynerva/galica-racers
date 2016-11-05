@@ -26,23 +26,24 @@ local function outOfBounds(x, y)
 end
 
 local function getLayerTile(layer, x, y)
+  if layer == 0 then return true end
   if outOfBounds(x, y) then return false end
   return layers[layer].map[x + y * width]
 end
 
 local function clearLayerTile(layer, x, y)
-  if outOfBounds(x, y) then return end
+  if layer == 0 or outOfBounds(x, y) then return end
   layers[layer].map[x + y * width] = false
 end
 
 local function setLayerTile(layer, x, y)
-  if outOfBounds(x, y) then return end
+  if layer == 0 or outOfBounds(x, y) then return end
   layers[layer].map[x + y * width] = true
 end
 
 local function getTile(x, y)
-  if #layers == 0 then return baseTerrain end
-  for layer=#layers,1 do
+  for i=0,#layers-1 do
+    local layer = #layers - i
     if getLayerTile(layer, x, y) then
       return layers[layer].terrain
     end
@@ -51,11 +52,15 @@ local function getTile(x, y)
 end
 
 function game.terrain.getLayerTerrainType(layer)
-  return terrainTypes[layers[layer].terrain]
+  if layer == 0 then
+    return terrainTypes[baseTerrain]
+  else
+    return terrainTypes[layers[layer].terrain]
+  end
 end
 
 function game.terrain.layerCount()
-  return #layers
+  return #layers + 1
 end
 
 function game.terrain.addLayer()
@@ -119,12 +124,26 @@ function game.terrain.write(f)
   end
 end
 
-function game.terrain.cycleBaseTerrain()
-  baseTerrain = (baseTerrain % #terrainTypes) + 1
+function game.terrain.cycleLayerTerrain(layer)
+  if layer == 0 then
+    baseTerrain = (baseTerrain % #terrainTypes) + 1
+  else
+    layers[layer].terrain = (layers[layer].terrain % #terrainTypes) + 1
+  end
 end
 
-function game.terrain.cycleLayerTerrain(layer)
-  layers[layer].terrain = (layers[layer].terrain % #terrainTypes) + 1
+function game.terrain.paint(layer, x, y)
+  local tileX, tileY = worldToTile(x, y)
+  tileX = math.floor(tileX)
+  tileY = math.floor(tileY)
+  setLayerTile(layer, tileX, tileY)
+end
+
+function game.terrain.erase(layer, x, y)
+  local tileX, tileY = worldToTile(x, y)
+  tileX = math.floor(tileX)
+  tileY = math.floor(tileY)
+  clearLayerTile(layer, tileX, tileY)
 end
 
 function game.terrain.draw()

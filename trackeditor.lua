@@ -1,13 +1,20 @@
 game.trackEditor = {}
 
 local finished = game.event.new()
+local selectedLayer = 0
 
-local function keypressed(key)
-  if key == "escape" then
-    finished:send()
-    return
-  end
-end
+local buttons = {
+  {text="Add layer",
+    click=function()
+      game.terrain.addLayer()
+    end
+  },
+  {text="Remove layer",
+    click=function()
+      game.terrain.removeLayer()
+    end
+  }
+}
 
 local function uiLayer(select, terrain)
   return function()
@@ -38,23 +45,26 @@ local function inUI(args)
   )
 end
 
-local buttons = {
-  {text="Add layer",
-    click=function()
-      game.terrain.addLayer()
-    end
-  },
-  {text="Remove layer",
-    click=function()
-      game.terrain.removeLayer()
-    end
-  },
-  {text="Cycle base terrain",
-    click=function()
-      game.terrain.cycleBaseTerrain()
+local function update()
+  local x, y = love.mouse.getPosition()
+  inUI {
+    track=function()
+      if not game.ui.inBounds(x, y) then return end
+      if love.mouse.isDown(1) then
+        game.terrain.paint(selectedLayer, game.camera.screenToWorld(x, y))
+      elseif love.mouse.isDown(2) then
+        game.terrain.erase(selectedLayer, game.camera.screenToWorld(x, y))
+      end
     end
   }
-}
+end
+
+local function keypressed(key)
+  if key == "escape" then
+    finished:send()
+    return
+  end
+end
 
 local function mousepressed(x, y)
   local layerFs = {}
@@ -65,10 +75,10 @@ local function mousepressed(x, y)
     end
   end
 
-  for i=1,game.terrain.layerCount() do
+  for i=0,game.terrain.layerCount()-1 do
     table.insert(layerFs, uiLayer(
       ifInBounds(function()
-        print("Select layer " .. i)
+        selectedLayer = i
       end),
       ifInBounds(function()
         game.terrain.cycleLayerTerrain(i)
@@ -103,7 +113,7 @@ local function draw()
   end
 
   local layerFs = {}
-  for i=1,game.terrain.layerCount() do
+  for i=0,game.terrain.layerCount()-1 do
     table.insert(layerFs, uiLayer(
       function() drawButton("Select", 128, 128, 128) end,
       function()
@@ -136,6 +146,7 @@ local function draw()
 end
 
 function game.trackEditor.run()
+  love.update = update
   love.keypressed = keypressed
   love.mousepressed = mousepressed
   love.draw = draw
