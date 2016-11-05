@@ -3,9 +3,9 @@ game.terrain = {}
 local tileSize = 2
 
 local terrainTypes = {
-  {color={64, 128, 64}},
-  {color={128, 92, 64}},
-  {color={64, 48, 32}}
+  {name="Grass", color={64, 128, 64}},
+  {name="Dirt", color={128, 92, 64}},
+  {name="Mud", color={64, 48, 32}}
 }
 
 local baseTerrain = nil
@@ -48,6 +48,27 @@ local function getTile(x, y)
     end
   end
   return baseTerrain
+end
+
+function game.terrain.getLayerTerrainType(layer)
+  return terrainTypes[layers[layer].terrain]
+end
+
+function game.terrain.layerCount()
+  return #layers
+end
+
+function game.terrain.addLayer()
+  table.insert(layers, {terrain=1, map={}})
+  for y=0,height-1 do
+    for x=0,width-1 do
+      clearLayerTile(#layers, x, y)
+    end
+  end
+end
+
+function game.terrain.removeLayer()
+  table.remove(layers)
 end
 
 function game.terrain.reset()
@@ -98,8 +119,12 @@ function game.terrain.write(f)
   end
 end
 
-function game.terrain.cycleBase()
+function game.terrain.cycleBaseTerrain()
   baseTerrain = (baseTerrain % #terrainTypes) + 1
+end
+
+function game.terrain.cycleLayerTerrain(layer)
+  layers[layer].terrain = (layers[layer].terrain % #terrainTypes) + 1
 end
 
 function game.terrain.draw()

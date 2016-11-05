@@ -67,3 +67,14 @@ function game.ui.margin(size, f)
   local h = game.ui.height
   inSubregion(size, size, w - size * 2, h - size * 2, f)
 end
+
+function game.ui.stackVertical(...)
+  local children = {...}
+  local count = select("#", ...)
+  local w = game.ui.width
+  local h = game.ui.height / count
+  for i=0,count-1 do
+    local f = children[i + 1]
+    inSubregion(0, h * i, w, h, f)
+  end
+end
