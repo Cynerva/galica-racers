@@ -2,13 +2,6 @@ game.trackEditor = {}
 
 local finished = game.event.new()
 
-local ui = game.ui.split("root", 2/3,
-  game.ui.pane("track"),
-  game.ui.margin("sidePanel", 10,
-    game.ui.pane("button")
-  )
-)
-
 local function update()
 end
 
@@ -19,14 +12,31 @@ local function keypressed(key)
   end
 end
 
+local function inUI(args)
+  local track = args.track or function() end
+  local sidePanel = args.sidePanel or function() end
+  local button = args.button or function() end
+  game.ui.split(2/3,
+    track,
+    function()
+      sidePanel()
+      game.ui.margin(10, button)
+    end
+  )
+end
+
 local function mousepressed(x, y)
-  if game.ui.contains(ui, "button", x, y) then
-    game.terrain.cycleBase()
-  end
+  inUI({
+    button=function()
+      if game.ui.inBounds(x, y) then
+        game.terrain.cycleBase()
+      end
+    end
+  })
 end
 
 local function draw()
-  game.ui.run(ui, {
+  inUI({
     track=function()
       game.camera.transform()
       game.track.draw()
