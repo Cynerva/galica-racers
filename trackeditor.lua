@@ -61,6 +61,13 @@ local function update()
       end
     end
   }
+  local dt = love.timer.getDelta()
+  local x, y = game.camera.getPosition()
+  if love.keyboard.isDown("left") then x = x - dt * 16 end
+  if love.keyboard.isDown("right") then x = x + dt * 16 end
+  if love.keyboard.isDown("up") then y = y - dt * 16 end
+  if love.keyboard.isDown("down") then y = y + dt * 16 end
+  game.camera.setPosition(x, y)
 end
 
 local function keypressed(key)
