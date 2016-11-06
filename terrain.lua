@@ -1,17 +1,20 @@
 game.terrain = {}
 
-local tileSize = 2
+-- Terrain types
 
-local terrainTypes = {
+local terrains = {
   {name="Grass", color={64, 128, 64}},
   {name="Dirt", color={128, 92, 64}},
   {name="Mud", color={64, 48, 32}}
 }
 
-local baseTerrain = nil
-local width = nil
-local height = nil
-local layers = nil
+local function getTerrain(i)
+  return terrains[i + 1]
+end
+
+-- Tile coordinates
+
+local tileSize = 2
 
 local function worldToTile(x, y)
   return x / tileSize, y / tileSize
@@ -21,8 +24,28 @@ local function tileToWorld(x, y)
   return x * tileSize, y * tileSize
 end
 
+-- Layers
+
+local baseTerrain = nil
+local width = nil
+local height = nil
+local layers = nil
+
 local function outOfBounds(x, y)
   return x < 0 or x >= width or y < 0 or y >= height
+end
+
+local function getLayerTerrain(layer)
+  if layer == 0 then return baseTerrain end
+  return layers[layer].terrain
+end
+
+local function setLayerTerrain(layer, terrain)
+  if layer == 0 then
+    baseTerrain = terrain
+  else
+    layers[layer].terrain = terrain
+  end
 end
 
 local function getLayerTile(layer, x, y)
@@ -41,43 +64,10 @@ local function setLayerTile(layer, x, y)
   layers[layer].map[x + y * width] = true
 end
 
-local function getTile(x, y)
-  for i=0,#layers-1 do
-    local layer = #layers - i
-    if getLayerTile(layer, x, y) then
-      return layers[layer].terrain
-    end
-  end
-  return baseTerrain
-end
-
-function game.terrain.getLayerTerrainType(layer)
-  if layer == 0 then
-    return terrainTypes[baseTerrain]
-  else
-    return terrainTypes[layers[layer].terrain]
-  end
-end
-
-function game.terrain.layerCount()
-  return #layers + 1
-end
-
-function game.terrain.addLayer()
-  table.insert(layers, {terrain=1, map={}})
-  for y=0,height-1 do
-    for x=0,width-1 do
-      clearLayerTile(#layers, x, y)
-    end
-  end
-end
-
-function game.terrain.removeLayer()
-  table.remove(layers)
-end
+-- terrain persistence
 
 function game.terrain.reset()
-  baseTerrain = 1
+  baseTerrain = 0
   width = 100
   height = 100
   layers = {}
@@ -124,12 +114,28 @@ function game.terrain.write(f)
   end
 end
 
-function game.terrain.cycleLayerTerrain(layer)
-  if layer == 0 then
-    baseTerrain = (baseTerrain % #terrainTypes) + 1
-  else
-    layers[layer].terrain = (layers[layer].terrain % #terrainTypes) + 1
+-- editor stuff
+
+function game.terrain.addLayer()
+  table.insert(layers, {terrain=0, map={}})
+  for y=0,height-1 do
+    for x=0,width-1 do
+      clearLayerTile(#layers, x, y)
+    end
   end
+end
+
+function game.terrain.removeLayer()
+  table.remove(layers)
+end
+
+function game.terrain.getLayerTerrainName(layer)
+  return getTerrain(getLayerTerrain(layer)).name
+end
+
+function game.terrain.cycleLayerTerrain(layer)
+  local terrain = getLayerTerrain(layer)
+  setLayerTerrain(layer, (terrain + 1) % #terrains)
 end
 
 function game.terrain.paint(layer, x, y)
@@ -146,6 +152,12 @@ function game.terrain.erase(layer, x, y)
   clearLayerTile(layer, tileX, tileY)
 end
 
+function game.terrain.layerCount()
+  return #layers + 1 -- count base layer
+end
+
+-- graphics
+
 function game.terrain.draw()
   local minX, minY = worldToTile(game.camera.screenToWorld(0, 0))
   local maxX, maxY = worldToTile(game.camera.screenToWorld(game.ui.width, game.ui.height))
@@ -154,15 +166,20 @@ function game.terrain.draw()
   maxX = math.floor(maxX)
   maxY = math.floor(maxY)
   game.debug.wireBrush()
-  for y=minY,maxY do
-    for x=minX,maxX do
-      love.graphics.push()
-      love.graphics.translate(tileToWorld(x, y))
-      love.graphics.setColor(unpack(terrainTypes[getTile(x, y)].color))
-      love.graphics.rectangle("fill", 0, 0, tileSize, tileSize)
-      love.graphics.setColor(0, 0, 0)
-      love.graphics.rectangle("line", 0, 0, tileSize, tileSize)
-      love.graphics.pop()
+  for layer=0,game.terrain.layerCount()-1 do
+    local color = getTerrain(getLayerTerrain(layer)).color
+    for y=minY,maxY do
+      for x=minX,maxX do
+        if getLayerTile(layer, x, y) then
+          love.graphics.push()
+          love.graphics.translate(tileToWorld(x, y))
+          love.graphics.setColor(unpack(color))
+          love.graphics.rectangle("fill", 0, 0, tileSize, tileSize)
+          love.graphics.setColor(0, 0, 0)
+          love.graphics.rectangle("line", 0, 0, tileSize, tileSize)
+          love.graphics.pop()
+        end
+      end
     end
   end
 end

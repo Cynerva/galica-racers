@@ -7,11 +7,15 @@ local buttons = {
   {text="Add layer",
     click=function()
       game.terrain.addLayer()
+      selectedLayer = game.terrain.layerCount() - 1
     end
   },
   {text="Remove layer",
     click=function()
       game.terrain.removeLayer()
+      if selectedLayer >= game.terrain.layerCount() then
+        selectedLayer = game.terrain.layerCount() - 1
+      end
     end
   }
 }
@@ -115,9 +119,15 @@ local function draw()
   local layerFs = {}
   for i=0,game.terrain.layerCount()-1 do
     table.insert(layerFs, uiLayer(
-      function() drawButton("Select", 128, 128, 128) end,
       function()
-        drawButton(game.terrain.getLayerTerrainType(i).name, 96, 96, 96)
+        if i == selectedLayer then
+          drawButton("Select", 192, 192, 192)
+        else
+          drawButton("Select", 128, 128, 128)
+        end
+      end,
+      function()
+        drawButton(game.terrain.getLayerTerrainName(i), 96, 96, 96)
       end
     ))
   end
