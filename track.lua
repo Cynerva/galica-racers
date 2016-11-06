@@ -7,6 +7,7 @@ game.track.endCollision = game.event.new()
 function game.track.reset()
   game.track.world = nil
   game.terrain.reset()
+  game.waypoints.reset()
 end
 
 function game.track.load()
@@ -15,6 +16,7 @@ function game.track.load()
     local f = love.filesystem.newFile("track")
     f:open("r")
     game.terrain.read(f)
+    game.waypoints.read(f)
     f:close()
   end
 end
@@ -23,6 +25,7 @@ function game.track.save()
   local f = love.filesystem.newFile("track")
   f:open("w")
   game.terrain.write(f)
+  game.waypoints.write(f)
   f:close()
 end
 
@@ -41,6 +44,7 @@ function game.track.addPhysics()
       game.track.endCollision:send(a, b)
     end
   )
+  game.waypoints.addPhysics(game.track.world)
 end
 
 function game.track.update()
@@ -51,5 +55,5 @@ end
 function game.track.draw()
   game.terrain.draw()
   game.debug.wireBrush()
-  --game.debug.drawPhysicsWorld(game.track.world)
+  game.debug.drawPhysicsWorld(game.track.world)
 end
