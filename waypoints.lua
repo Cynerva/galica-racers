@@ -73,3 +73,11 @@ local function watchCollisions()
 end
 
 game.event.fork(watchCollisions)
+
+function game.waypoints.draw()
+  love.graphics.setLineWidth(0.2)
+  love.graphics.setColor(128, 255, 128)
+  for i,wp in ipairs(waypoints) do
+    love.graphics.line(wp.x1, wp.y1, wp.x2, wp.y2)
+  end
+end

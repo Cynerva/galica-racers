@@ -150,6 +150,7 @@ local function draw()
     track=function()
       game.camera.transform()
       game.track.draw()
+      game.waypoints.draw()
     end,
     sidePanel=function()
       drawBox(32, 32, 32)
