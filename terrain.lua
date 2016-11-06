@@ -3,7 +3,7 @@ game.terrain = {}
 -- Terrain types
 
 local terrains = {
-  {name="Grass", color={64, 128, 64}},
+  {name="Sand", color={128, 128, 64}},
   {name="Dirt", color={128, 92, 64}},
   {name="Mud", color={64, 48, 32}}
 }
