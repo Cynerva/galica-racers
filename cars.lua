@@ -8,7 +8,7 @@ end
 
 function game.cars.reset()
   car = {}
-  local x, y = 0, 0
+  local x, y = game.track.getSpawn()
   car.body = love.physics.newBody(game.track.world, x, y, "dynamic")
   local shape = love.physics.newRectangleShape(2, 1)
   local fixture = love.physics.newFixture(car.body, shape, 1)

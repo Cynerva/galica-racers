@@ -15,7 +15,7 @@ local function mousepressed(x, y)
     end,
     panelHeader=function()
       if not game.ui.inBounds(x, y) then return end
-      game.terrainEditor.start()
+      game.spawnEditor.start()
     end,
     panel=function()
       if not game.ui.inBounds(x, y) then return end
@@ -54,3 +54,4 @@ local function watchWaypointEvents()
 end
 
 game.event.fork(watchWaypointEvents)
+

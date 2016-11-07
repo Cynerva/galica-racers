@@ -11,6 +11,7 @@ require("cars")
 require("race")
 require("terraineditor")
 require("waypointeditor")
+require("spawneditor")
 require("trackeditor")
 require("mainmenu")
 
