@@ -176,7 +176,7 @@ function game.terrain.draw()
           love.graphics.setColor(unpack(color))
           love.graphics.rectangle("fill", 0, 0, tileSize, tileSize)
           love.graphics.setColor(0, 0, 0)
-          love.graphics.rectangle("line", 0, 0, tileSize, tileSize)
+          --love.graphics.rectangle("line", 0, 0, tileSize, tileSize)
           love.graphics.pop()
         end
       end

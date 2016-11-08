@@ -73,6 +73,6 @@ end
 function game.track.draw()
   game.terrain.draw()
   game.debug.wireBrush()
-  game.debug.drawPhysicsWorld(game.track.world)
+  --game.debug.drawPhysicsWorld(game.track.world)
   love.graphics.circle("line", spawnX, spawnY, 2)
 end
