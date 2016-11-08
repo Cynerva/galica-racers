@@ -199,10 +199,10 @@ end
 function game.terrain.draw()
   local minX, minY = worldToTile(game.camera.screenToWorld(0, 0))
   local maxX, maxY = worldToTile(game.camera.screenToWorld(game.ui.width, game.ui.height))
-  minX = math.floor(minX)
-  minY = math.floor(minY)
-  maxX = math.floor(maxX)
-  maxY = math.floor(maxY)
+  minX = math.floor(minX) - 1
+  minY = math.floor(minY) - 1
+  maxX = math.floor(maxX) + 1
+  maxY = math.floor(maxY) + 1
   game.debug.wireBrush()
   for layer=0,game.terrain.layerCount()-1 do
     local terrain = getTerrain(getLayerTerrain(layer))
