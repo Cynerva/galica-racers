@@ -3,9 +3,10 @@ game.terrain = {}
 -- Terrain types
 
 local terrains = {
-  {name="Sand", color={128, 128, 64}},
-  {name="Dirt", color={128, 92, 64}},
-  {name="Mud", color={64, 48, 32}}
+  {name="Sand", image=love.graphics.newImage("terrain-sprites/sand.png")},
+  {name="Rocky Sand", image=love.graphics.newImage("terrain-sprites/rocky-sand.png")},
+  {name="Rock", image=love.graphics.newImage("terrain-sprites/rock.png")},
+  {name="Mud", image=love.graphics.newImage("terrain-sprites/mud.png")}
 }
 
 local function getTerrain(i)
@@ -167,14 +168,17 @@ function game.terrain.draw()
   maxY = math.floor(maxY)
   game.debug.wireBrush()
   for layer=0,game.terrain.layerCount()-1 do
-    local color = getTerrain(getLayerTerrain(layer)).color
+    local image = getTerrain(getLayerTerrain(layer)).image
+    local scaleX = tileSize / image:getWidth()
+    local scaleY = tileSize / image:getHeight()
     for y=minY,maxY do
       for x=minX,maxX do
         if getLayerTile(layer, x, y) then
           love.graphics.push()
           love.graphics.translate(tileToWorld(x, y))
-          love.graphics.setColor(unpack(color))
-          love.graphics.rectangle("fill", 0, 0, tileSize, tileSize)
+          love.graphics.setColor(255, 255, 255)
+          love.graphics.draw(image, 0, 0, 0, scaleX, scaleY)
+          --love.graphics.rectangle("fill", 0, 0, tileSize, tileSize)
           love.graphics.setColor(0, 0, 0)
           --love.graphics.rectangle("line", 0, 0, tileSize, tileSize)
           love.graphics.pop()
