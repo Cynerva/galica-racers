@@ -1,11 +1,17 @@
 game.cars = {}
 
+local function newCarImage(path)
+  local image = love.graphics.newImage(path)
+  image:setFilter("nearest")
+  return image
+end
+
 local car = nil
 local images = {
-  love.graphics.newImage("car-sprites/car4.png"),
-  love.graphics.newImage("car-sprites/car3.png"),
-  love.graphics.newImage("car-sprites/car2.png"),
-  love.graphics.newImage("car-sprites/car1.png")
+  newCarImage("car-sprites/car4.png"),
+  newCarImage("car-sprites/car3.png"),
+  newCarImage("car-sprites/car2.png"),
+  newCarImage("car-sprites/car1.png")
 }
 local speedIntegral = nil -- used for animation
 

@@ -2,11 +2,48 @@ game.terrain = {}
 
 -- Terrain types
 
+local function newTerrain(name, imagePath)
+  local image = love.graphics.newImage(imagePath)
+  local width = image:getWidth()
+  local height = image:getHeight()
+  local fullWidth = width * 3
+  local fullHeight = height * 3
+  local canvas = love.graphics.newCanvas(fullWidth, fullHeight)
+  love.graphics.setCanvas(canvas)
+  for y=0,2 do
+    for x=0,2 do
+      love.graphics.draw(image, width * x, height * y)
+    end
+  end
+  love.graphics.setCanvas()
+  local imageData = canvas:newImageData()
+  for y=0,fullHeight - 1 do
+    for x=0,fullWidth - 1 do
+      local r, g, b, a = imageData:getPixel(x, y)
+      local dist = math.sqrt((x - fullWidth / 2) ^ 2 + (y - fullHeight / 2) ^ 2)
+      dist = dist - math.sqrt((width / 2) ^ 2 + (height / 2) ^ 2)
+      a = math.max(0, math.min(255, 255 - dist * 10))
+      imageData:setPixel(x, y, r, g, b, a)
+    end
+  end
+  local image = love.graphics.newImage(imageData)
+  local originX = width
+  local originY = height
+  local terrain = {}
+  terrain.name = name
+  terrain.image = image
+  terrain.width = width
+  terrain.height = height
+  terrain.originX = originX
+  terrain.originY = originY
+  return terrain
+end
+
 local terrains = {
-  {name="Sand", image=love.graphics.newImage("terrain-sprites/sand.png")},
-  {name="Rocky Sand", image=love.graphics.newImage("terrain-sprites/rocky-sand.png")},
-  {name="Rock", image=love.graphics.newImage("terrain-sprites/rock.png")},
-  {name="Mud", image=love.graphics.newImage("terrain-sprites/mud.png")}
+  newTerrain("Sand", "terrain-sprites/sand.png"),
+  newTerrain("Rocky Sand", "terrain-sprites/rocky-sand.png"),
+  newTerrain("Rock", "terrain-sprites/rock.png"),
+  newTerrain("Mud", "terrain-sprites/mud.png")
 }
 
 local function getTerrain(i)
@@ -168,16 +205,21 @@ function game.terrain.draw()
   maxY = math.floor(maxY)
   game.debug.wireBrush()
   for layer=0,game.terrain.layerCount()-1 do
-    local image = getTerrain(getLayerTerrain(layer)).image
-    local scaleX = tileSize / image:getWidth()
-    local scaleY = tileSize / image:getHeight()
+    local terrain = getTerrain(getLayerTerrain(layer))
+    local scaleX = tileSize / terrain.width
+    local scaleY = tileSize / terrain.height
     for y=minY,maxY do
       for x=minX,maxX do
         if getLayerTile(layer, x, y) then
           love.graphics.push()
           love.graphics.translate(tileToWorld(x, y))
           love.graphics.setColor(255, 255, 255)
-          love.graphics.draw(image, 0, 0, 0, scaleX, scaleY)
+          love.graphics.draw(terrain.image,
+            0, 0, -- pos
+            0, -- angle
+            scaleX, scaleY, -- scale
+            terrain.originX, terrain.originY -- origin
+          )
           --love.graphics.rectangle("fill", 0, 0, tileSize, tileSize)
           love.graphics.setColor(0, 0, 0)
           --love.graphics.rectangle("line", 0, 0, tileSize, tileSize)
