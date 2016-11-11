@@ -1,5 +1,8 @@
 game.mainMenu = {}
 
+local music = love.audio.newSource("music/menu.ogg")
+music:setLooping(true)
+
 local options = {"Play", "Track Editor", "Quit"}
 local cursor = 0
 local select = game.event.new()
@@ -38,8 +41,10 @@ function game.mainMenu.run()
     love.keypressed = keypressed
     love.draw = draw
     cursor = 0
+    music:play()
     local selection = select:wait()
     if selection == "Play" then
+      music:stop()
       game.race.run()
     elseif selection == "Track Editor" then
       game.trackEditor.run()

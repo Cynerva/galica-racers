@@ -1,5 +1,8 @@
 game.race = {}
 
+local music = love.audio.newSource("music/race.ogg")
+music:setLooping(true)
+
 local function update()
   game.track.update()
   game.cars.update()
@@ -16,8 +19,10 @@ function game.race.run()
   love.draw = draw
   game.track.load()
   game.track.addPhysics()
+  music:play()
   game.cars.withCars(function()
     game.camera.followCar()
     game.waypoints.finishedLap:wait()
   end)
+  music:stop()
 end
