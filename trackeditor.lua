@@ -71,6 +71,7 @@ end
 
 function game.trackEditor.run()
   love.keypressed = keypressed
+  game.camera.setPosition(0, 0)
   game.track.load()
   game.terrainEditor.start()
   finished:wait()

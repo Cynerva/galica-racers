@@ -13,6 +13,7 @@ function game.track.reset()
   spawnY = 0
   game.terrain.reset()
   game.waypoints.reset()
+  game.props.reset()
 end
 
 function game.track.load()
@@ -24,6 +25,7 @@ function game.track.load()
     spawnY = f:read(1):byte()
     game.terrain.read(f)
     game.waypoints.read(f)
+    game.props.read(f)
     f:close()
   end
 end
@@ -35,6 +37,7 @@ function game.track.save()
   f:write(string.char(spawnY))
   game.terrain.write(f)
   game.waypoints.write(f)
+  game.props.write(f)
   f:close()
 end
 
@@ -63,6 +66,7 @@ function game.track.addPhysics()
     end
   )
   game.waypoints.addPhysics(game.track.world)
+  game.props.addPhysics(game.track.world)
 end
 
 function game.track.update()
@@ -72,7 +76,8 @@ end
 
 function game.track.draw()
   game.terrain.draw()
+  game.props.draw()
   game.debug.wireBrush()
-  --game.debug.drawPhysicsWorld(game.track.world)
   love.graphics.circle("line", spawnX, spawnY, 2)
+  game.debug.drawPhysicsWorld(game.track.world)
 end
