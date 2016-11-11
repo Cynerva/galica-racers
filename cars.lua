@@ -15,11 +15,14 @@ local images = {
 }
 local speedIntegral = nil -- used for animation
 
+local engineSound = love.audio.newSource("sounds/engine2.ogg")
+engineSound:setLooping(true)
+
 function game.cars.getBody()
   return car.body
 end
 
-function game.cars.reset()
+function game.cars.withCars(f)
   car = {}
   local x, y = game.track.getSpawn()
   car.body = love.physics.newBody(game.track.world, x, y, "dynamic")
@@ -29,6 +32,9 @@ function game.cars.reset()
   local fixture = love.physics.newFixture(car.body, shape, 1)
   car.body:setLinearDamping(0.5)
   speedIntegral = 0
+  engineSound:play()
+  f()
+  engineSound:stop()
 end
 
 function game.cars.update()
@@ -56,6 +62,7 @@ function game.cars.update()
   dy = speed * uy
   car.body:setLinearVelocity(dx, dy)
   speedIntegral = speedIntegral + speed * dt
+  engineSound:setPitch(1 + math.abs(speed) * 0.05)
 end
 
 function game.cars.draw()

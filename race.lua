@@ -16,7 +16,8 @@ function game.race.run()
   love.draw = draw
   game.track.load()
   game.track.addPhysics()
-  game.cars.reset()
-  game.camera.followCar()
-  game.waypoints.finishedLap:wait()
+  game.cars.withCars(function()
+    game.camera.followCar()
+    game.waypoints.finishedLap:wait()
+  end)
 end
