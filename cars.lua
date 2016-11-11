@@ -23,7 +23,9 @@ function game.cars.reset()
   car = {}
   local x, y = game.track.getSpawn()
   car.body = love.physics.newBody(game.track.world, x, y, "dynamic")
-  local shape = love.physics.newRectangleShape(3, 2.5)
+  local shape = love.physics.newRectangleShape(-0.9, 0, 1, 2.5)
+  local fixture = love.physics.newFixture(car.body, shape, 1)
+  local shape = love.physics.newRectangleShape(3, 1)
   local fixture = love.physics.newFixture(car.body, shape, 1)
   car.body:setLinearDamping(0.5)
   speedIntegral = 0
