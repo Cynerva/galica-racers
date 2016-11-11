@@ -78,7 +78,7 @@ local function mousepressed(x, y)
   end
 
   game.trackEditor.inUI {
-    panelHeader=ifInBounds(game.waypointEditor.start),
+    panelHeader=ifInBounds(game.propEditor.start),
     panel=panelUI(layers, buttons)
   }
 end
@@ -111,6 +111,7 @@ local function draw()
 end
 
 function game.terrainEditor.start()
+  love.keypressed = game.trackEditor.keypressed
   love.update = update
   love.draw = draw
   love.mousepressed = mousepressed

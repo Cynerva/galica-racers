@@ -15,7 +15,7 @@ local function mousepressed(x, y)
     end,
     panelHeader=function()
       if not game.ui.inBounds(x, y) then return end
-      game.spawnEditor.start()
+      game.terrainEditor.start()
     end,
     panel=function()
       if not game.ui.inBounds(x, y) then return end
@@ -39,6 +39,7 @@ local function draw()
 end
 
 function game.waypointEditor.start()
+  love.keypressed = game.trackEditor.keypressed
   love.update = update
   love.mousepressed = mousepressed
   love.mousereleased = mousereleased

@@ -79,5 +79,5 @@ function game.track.draw()
   game.props.draw()
   game.debug.wireBrush()
   love.graphics.circle("line", spawnX, spawnY, 2)
-  game.debug.drawPhysicsWorld(game.track.world)
+  --game.debug.drawPhysicsWorld(game.track.world)
 end

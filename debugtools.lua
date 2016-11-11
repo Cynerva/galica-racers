@@ -37,7 +37,6 @@ end
 
 function game.debug.drawPhysicsWorld(world)
   if world == nil then
-    print("WARNING: game.debug.drawPhysicsWorld nil")
     return
   end
   for i,body in ipairs(world:getBodyList()) do

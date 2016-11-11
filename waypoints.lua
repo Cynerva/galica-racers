@@ -62,12 +62,16 @@ local function watchCollisions()
     local a, b = game.track.beginCollision:wait()
     if a.isWaypoint and a.id == nextWaypoint then
       nextWaypoint = nextWaypoint + 1
-    elseif b.isWayoint and b.id == nextWaypoint then
+      if nextWaypoint > #waypoints then
+        nextWaypoint = 1
+        game.waypoints.finishedLap:send()
+      end
+    elseif b.isWaypoint and b.id == nextWaypoint then
       nextWaypoint = nextWaypoint + 1
-    end
-    if nextWaypoint > #waypoints then
-      nextWaypoint = 1
-      game.waypoints.finishedLap:send()
+      if nextWaypoint > #waypoints then
+        nextWaypoint = 1
+        game.waypoints.finishedLap:send()
+      end
     end
   end
 end

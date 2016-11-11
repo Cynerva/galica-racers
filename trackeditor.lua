@@ -62,7 +62,7 @@ function game.trackEditor.draw(mode, drawPanel)
   }
 end
 
-local function keypressed(key)
+function game.trackEditor.keypressed(key)
   if key == "escape" then
     finished:send()
     return
@@ -70,7 +70,6 @@ local function keypressed(key)
 end
 
 function game.trackEditor.run()
-  love.keypressed = keypressed
   game.camera.setPosition(0, 0)
   game.track.load()
   game.terrainEditor.start()
