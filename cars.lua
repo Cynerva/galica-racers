@@ -33,6 +33,7 @@ function game.cars.withCars(f)
   local fixture = love.physics.newFixture(car.body, shape, 1)
   car.body:setLinearDamping(0.5)
   speedIntegral = 0
+  engineSound:setVolume(1)
   engineSound:play()
   f()
   engineSound:stop()
@@ -77,6 +78,10 @@ function game.cars.draw()
   )
   game.debug.wireBrush()
   --game.debug.drawPhysicsBody(car.body)
+end
+
+function game.cars.setVolume(volume)
+  engineSound:setVolume(volume)
 end
 
 local function watchCollisions()
