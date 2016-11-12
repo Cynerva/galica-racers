@@ -28,7 +28,7 @@ local function draw()
     else
       love.graphics.setColor(128, 128, 128)
     end
-    love.graphics.printf(text, 0, 200 + 50 * i, game.ui.width, "center")
+    love.graphics.printf(text, 0, (i + 2) * game.ui.height / 7, game.ui.width, "center")
   end
 end
 
