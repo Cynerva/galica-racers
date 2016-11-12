@@ -17,6 +17,7 @@ local speedIntegral = nil -- used for animation
 
 local engineSound = love.audio.newSource("sounds/engine2.ogg")
 engineSound:setLooping(true)
+local collisionSound = love.audio.newSource("sounds/collision.ogg")
 
 function game.cars.getBody()
   return car.body
@@ -77,3 +78,17 @@ function game.cars.draw()
   game.debug.wireBrush()
   --game.debug.drawPhysicsBody(car.body)
 end
+
+local function watchCollisions()
+  while true do
+    local a, b, impulse = game.track.postSolveCollision:wait()
+    if not collisionSound:isPlaying() then
+      collisionSound:setVolume(0)
+      collisionSound:play()
+    end
+    local volume = math.max(collisionSound:getVolume(), math.min(1.0, impulse / 100))
+    collisionSound:setVolume(volume)
+  end
+end
+
+game.event.fork(watchCollisions)

@@ -3,6 +3,7 @@ game.track = {}
 game.track.world = nil
 game.track.beginCollision = game.event.new()
 game.track.endCollision = game.event.new()
+game.track.postSolveCollision = game.event.new()
 
 local spawnX = nil
 local spawnY = nil
@@ -63,6 +64,12 @@ function game.track.addPhysics()
       a = a:getUserData()
       b = b:getUserData()
       game.track.endCollision:send(a, b)
+    end,
+    function() end,
+    function(a, b, contact, ...)
+      a = a:getUserData()
+      b = b:getUserData()
+      game.track.postSolveCollision:send(a, b, ...)
     end
   )
   game.waypoints.addPhysics(game.track.world)
