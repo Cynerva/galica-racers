@@ -50,6 +50,7 @@ function game.trackEditor.draw(mode, drawPanel)
     track=function()
       game.camera.transform()
       game.track.draw()
+      game.track.drawSpawn()
       game.waypoints.draw()
     end,
     panelBackground=function()

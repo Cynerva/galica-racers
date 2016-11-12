@@ -20,7 +20,7 @@ end
 local function draw()
   oldDraw()
   love.graphics.origin()
-  love.graphics.setColor(0, 0, 0, 128)
+  love.graphics.setColor(0, 0, 0, 192)
   love.graphics.rectangle("fill", 0, 0, game.ui.width, game.ui.height)
   for i,text in ipairs(options) do
     if i == cursor + 1 then
@@ -28,7 +28,7 @@ local function draw()
     else
       love.graphics.setColor(128, 128, 128)
     end
-    love.graphics.printf(text, 0, (i + 2) * game.ui.height / 7, game.ui.width, "center")
+    love.graphics.printf(text, 0, (i + 4) * game.ui.height / 11, game.ui.width, "center")
   end
 end
 
