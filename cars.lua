@@ -39,6 +39,40 @@ function game.cars.withCars(f)
   engineSound:stop()
 end
 
+local function getControls()
+  local controls = {}
+  local accel = 0
+  local turn = 0
+  for i,joystick in ipairs(love.joystick.getJoysticks()) do
+    accel = accel + (joystick:getAxis(6) + 1) / 2
+    accel = accel - (joystick:getAxis(3) + 1) / 2
+    turn = turn + joystick:getAxis(1)
+    if joystick:isGamepadDown("dpleft") then
+      turn = turn - 1
+    end
+    if joystick:isGamepadDown("dpright") then
+      turn = turn + 1
+    end
+  end
+  if love.keyboard.isDown("up") then
+    accel = accel + 1
+  end
+  if love.keyboard.isDown("down") then
+    accel = accel - 1
+  end
+  if love.keyboard.isDown("left") then
+    turn = turn - 1
+  end
+  if love.keyboard.isDown("right") then
+    turn = turn + 1
+  end
+  accel = math.min(1, math.max(-1, accel))
+  turn = math.min(1, math.max(-1, turn))
+  controls.accel = accel
+  controls.turn = turn
+  return controls
+end
+
 function game.cars.update()
   local dt = love.timer.getDelta()
   local angle = car.body:getAngle()
@@ -46,19 +80,10 @@ function game.cars.update()
   local ux = math.cos(angle)
   local uy = math.sin(angle)
   local speed = dx * ux + dy * uy
-  local accel = 0
-  if love.keyboard.isDown("up") then
-    accel = 20 * dt
-  elseif love.keyboard.isDown("down") then
-    accel = -10 * dt
-  end
-  if love.keyboard.isDown("left") then
-    car.body:setAngularVelocity(-math.max(math.min(speed / 2, 3), -3))
-  elseif love.keyboard.isDown("right") then
-    car.body:setAngularVelocity(math.max(math.min(speed / 2, 3), -3))
-  else
-    car.body:setAngularVelocity(0)
-  end
+  local controls = getControls()
+  local accel = controls.accel * 20 * dt
+  if accel < 0 then accel = accel / 2 end
+  car.body:setAngularVelocity(controls.turn * math.max(math.min(speed / 2, 3), -3))
   speed = speed + accel
   dx = speed * ux
   dy = speed * uy

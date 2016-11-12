@@ -17,6 +17,18 @@ local function keypressed(key)
   end
 end
 
+local function gamepadpressed(joystick, button)
+  if button == "a" then
+    selection:send(options[cursor + 1])
+  elseif button == "dpup" then
+    cursor = (cursor - 1) % #options
+  elseif button == "dpdown" then
+    cursor = (cursor + 1) % #options
+  elseif button == "b" or button == "start" then
+    selection:send(options[1])
+  end
+end
+
 local function draw()
   oldDraw()
   love.graphics.origin()
@@ -36,17 +48,20 @@ function game.pause.run()
   cursor = 0
   local oldUpdate = love.update
   local oldKeypressed = love.keypressed
+  local oldGamepadpressed = love.gamepadpressed
   local oldMousepressed = love.mousepressed
   local oldMousereleased = love.mousereleased
   oldDraw = love.draw
   love.update = nil
   love.keypressed = keypressed
+  love.gamepadpressed = gamepadpressed
   love.mousepressed = nil
   love.mousereleased = nil
   love.draw = draw
   local selection = selection:wait()
   love.update = oldUpdate
   love.keypressed = oldKeypressed
+  love.gamepadpressed = oldGamepadpressed
   love.mousepressed = oldMousepressed
   love.mousereleased = oldMousereleased
   love.draw = oldDraw

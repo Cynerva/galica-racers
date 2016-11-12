@@ -10,19 +10,29 @@ local function update()
   game.cars.update()
 end
 
+local function pauseRace()
+  game.event.fork(function()
+    music:pause()
+    game.cars.setVolume(0)
+    local result = game.pause.run()
+    if result == "Return to Menu" then
+      done:send()
+    else
+      game.cars.setVolume(1)
+       music:resume()
+    end
+  end)
+end
+
 local function keypressed(key)
   if key == "escape" then
-    game.event.fork(function()
-      music:pause()
-      game.cars.setVolume(0)
-      local result = game.pause.run()
-      if result == "Return to Menu" then
-        done:send()
-      else
-        game.cars.setVolume(1)
-        music:resume()
-      end
-    end)
+    pauseRace()
+  end
+end
+
+local function gamepadpressed(joystick, button)
+  if button == "start" then
+    pauseRace()
   end
 end
 
@@ -35,6 +45,7 @@ end
 function game.race.run()
   love.update = update
   love.keypressed = keypressed
+  love.gamepadpressed = gamepadpressed
   love.draw = draw
   game.track.load()
   game.track.addPhysics()

@@ -76,11 +76,22 @@ local function keypressed(key)
   end
 end
 
+local function gamepadpressed(joystick, button)
+  if button == "dpup" then
+    moveUp()
+  elseif button == "dpdown" then
+    moveDown()
+  elseif button == "a" then
+    select:send(options[cursor + 1])
+  end
+end
+
 function game.mainMenu.run()
   while true do
     love.update = update
     love.keypressed = keypressed
     love.draw = draw
+    love.gamepadpressed = gamepadpressed
     cursor = 0
     game.track.reset()
     game.camera.setPosition(0, 0)
