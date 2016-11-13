@@ -22,23 +22,23 @@ end
 
 function game.waypoints.read(f)
   game.waypoints.reset()
-  local numWaypoints = f:read(1):byte()
+  local numWaypoints = game.files.readNum(f)
   for i=1,numWaypoints do
-    local x1 = f:read(1):byte()
-    local y1 = f:read(1):byte()
-    local x2 = f:read(1):byte()
-    local y2 = f:read(1):byte()
+    local x1 = game.files.readNum(f)
+    local y1 = game.files.readNum(f)
+    local x2 = game.files.readNum(f)
+    local y2 = game.files.readNum(f)
     game.waypoints.add(x1, y1, x2, y2)
   end
 end
 
 function game.waypoints.write(f)
-  f:write(string.char(#waypoints))
+  game.files.writeNum(f, #waypoints)
   for _,wp in ipairs(waypoints) do
-    f:write(string.char(wp.x1))
-    f:write(string.char(wp.y1))
-    f:write(string.char(wp.x2))
-    f:write(string.char(wp.y2))
+    game.files.writeNum(f, wp.x1)
+    game.files.writeNum(f, wp.y1)
+    game.files.writeNum(f, wp.x2)
+    game.files.writeNum(f, wp.y2)
   end
 end
 

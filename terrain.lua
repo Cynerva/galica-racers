@@ -106,20 +106,20 @@ end
 
 function game.terrain.reset()
   baseTerrain = 0
-  width = 100
-  height = 100
+  width = 255
+  height = 255
   layers = {}
 end
 
 function game.terrain.read(f)
   game.terrain.reset()
-  baseTerrain = f:read(1):byte()
-  width = f:read(1):byte()
-  height = f:read(1):byte()
-  local layerCount = f:read(1):byte()
+  baseTerrain = game.files.readNum(f)
+  width = game.files.readNum(f)
+  height = game.files.readNum(f)
+  local numLayers = game.files.readNum(f)
   assert(#layers == 0)
-  for layer=1,layerCount do
-    local terrain = f:read(1):byte()
+  for layer=1,numLayers do
+    local terrain = game.files.readNum(f)
     table.insert(layers, {terrain=terrain, map={}})
     for y=0,height-1 do
       for x=0,width-1 do
@@ -134,12 +134,12 @@ function game.terrain.read(f)
 end
 
 function game.terrain.write(f)
-  f:write(string.char(baseTerrain))
-  f:write(string.char(width))
-  f:write(string.char(height))
-  f:write(string.char(#layers))
+  game.files.writeNum(f, baseTerrain)
+  game.files.writeNum(f, width)
+  game.files.writeNum(f, height)
+  game.files.writeNum(f, #layers)
   for layer=1,#layers do
-    f:write(string.char(layers[layer].terrain))
+    game.files.writeNum(f, layers[layer].terrain)
     for y=0,height-1 do
       for x=0,width-1 do
         if getLayerTile(layer, x, y) then
@@ -203,7 +203,7 @@ function game.terrain.draw()
   minY = math.floor(minY) - 1
   maxX = math.floor(maxX) + 1
   maxY = math.floor(maxY) + 1
-  game.debug.wireBrush()
+  love.graphics.setColor(255, 255, 255)
   for layer=0,game.terrain.layerCount()-1 do
     local terrain = getTerrain(getLayerTerrain(layer))
     local scaleX = tileSize / terrain.width
@@ -211,19 +211,13 @@ function game.terrain.draw()
     for y=minY,maxY do
       for x=minX,maxX do
         if getLayerTile(layer, x, y) then
-          love.graphics.push()
-          love.graphics.translate(tileToWorld(x, y))
-          love.graphics.setColor(255, 255, 255)
+          local worldX, worldY = tileToWorld(x, y)
           love.graphics.draw(terrain.image,
-            0, 0, -- pos
+            worldX, worldY, -- pos
             0, -- angle
             scaleX, scaleY, -- scale
             terrain.originX, terrain.originY -- origin
           )
-          --love.graphics.rectangle("fill", 0, 0, tileSize, tileSize)
-          love.graphics.setColor(0, 0, 0)
-          --love.graphics.rectangle("line", 0, 0, tileSize, tileSize)
-          love.graphics.pop()
         end
       end
     end

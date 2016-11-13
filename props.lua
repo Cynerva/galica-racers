@@ -98,21 +98,21 @@ function game.props.reset()
 end
 
 function game.props.read(f)
-  local count = f:read(1):byte()
+  local count = game.files.readNum(f)
   for i=1,count do
-    local type = f:read(1):byte()
-    local x = f:read(1):byte()
-    local y = f:read(1):byte()
+    local type = game.files.readNum(f)
+    local x = game.files.readNum(f)
+    local y = game.files.readNum(f)
     game.props.addProp(x, y, type)
   end
 end
 
 function game.props.write(f)
-  f:write(string.char(#props))
+  game.files.writeNum(f, #props)
   for _,prop in ipairs(props) do
-    f:write(string.char(prop.type))
-    f:write(string.char(prop.x))
-    f:write(string.char(prop.y))
+    game.files.writeNum(f, prop.type)
+    game.files.writeNum(f, prop.x)
+    game.files.writeNum(f, prop.y)
   end
 end
 

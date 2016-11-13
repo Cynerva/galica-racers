@@ -81,10 +81,10 @@ function game.cars.update()
   local uy = math.sin(angle)
   local speed = dx * ux + dy * uy
   local controls = getControls()
-  local accel = controls.accel * 20 * dt
+  local accel = controls.accel * 20
   if accel < 0 then accel = accel / 2 end
   car.body:setAngularVelocity(controls.turn * math.max(math.min(speed / 2, 3), -3))
-  speed = speed + accel
+  speed = speed + accel * dt
   dx = speed * ux
   dy = speed * uy
   car.body:setLinearVelocity(dx, dy)
