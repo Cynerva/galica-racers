@@ -74,22 +74,29 @@ local function getControls()
 end
 
 function game.cars.update()
-  local dt = love.timer.getDelta()
+  local controls = getControls()
   local angle = car.body:getAngle()
   local dx, dy = car.body:getLinearVelocity()
   local ux = math.cos(angle)
   local uy = math.sin(angle)
-  local speed = dx * ux + dy * uy
-  local controls = getControls()
-  local accel = controls.accel * 20
-  if accel < 0 then accel = accel / 2 end
-  car.body:setAngularVelocity(controls.turn * math.max(math.min(speed / 2, 3), -3))
-  speed = speed + accel * dt
-  dx = speed * ux
-  dy = speed * uy
-  car.body:setLinearVelocity(dx, dy)
-  speedIntegral = speedIntegral + speed * dt
-  engineSound:setPitch(1 + math.abs(speed) * 0.05)
+  local forwardSpeed = dx * ux + dy * uy
+  -- forward/backward calculations
+  local accelForce = controls.accel * 120
+  if accelForce < 0 then accelForce = accelForce / 2 end
+  car.body:applyForce(accelForce * ux, accelForce * uy)
+  -- left/right calculations
+  local sideAngle = angle + math.pi / 2
+  local sideUx = math.cos(sideAngle)
+  local sideUy = math.sin(sideAngle)
+  local sideSpeed = dx * sideUx + dy * sideUy
+  local sideForce = -sideSpeed * 64
+  car.body:applyForce(sideForce * sideUx, sideForce * sideUy)
+  -- angular calculations
+  car.body:setAngularVelocity(controls.turn * math.max(math.min(forwardSpeed / 2, 3), -3))
+  -- animations and sound
+  local dt = love.timer.getDelta()
+  speedIntegral = speedIntegral + forwardSpeed * dt
+  engineSound:setPitch(1 + math.abs(forwardSpeed) * 0.05)
 end
 
 function game.cars.draw()
