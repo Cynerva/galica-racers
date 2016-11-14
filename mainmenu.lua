@@ -5,10 +5,13 @@ titleArt:setFilter("nearest")
 
 local music = love.audio.newSource("music/menu.ogg")
 music:setLooping(true)
+local selectSound = love.audio.newSource("sounds/collision.ogg")
 
 local options = {"Play", "Track Editor", "Quit"}
 local cursor = 0
 local select = game.event.new()
+local updateTransition = game.event.new()
+local showHighlighted = true
 
 local function update()
   local dt = love.timer.getDelta()
@@ -16,6 +19,7 @@ local function update()
   x = x + dt
   y = y + dt
   game.camera.setPosition(x, y)
+  updateTransition:send()
 end
 
 local function draw()
@@ -23,8 +27,6 @@ local function draw()
   game.camera.transform()
   game.track.draw()
   love.graphics.pop()
-  --love.graphics.setColor(255, 255, 255, 128)
-  --love.graphics.rectangle("fill", 0, 0, game.ui.width, game.ui.height)
   game.ui.split(1/3,
     function()
       love.graphics.setColor(0, 0, 0, 192)
@@ -35,7 +37,9 @@ local function draw()
         else
           love.graphics.setColor(128, 128, 128)
         end
-        love.graphics.printf(text, 0, (i + 4) * game.ui.height / 12, game.ui.width, "center")
+        if showHighlighted or i ~= cursor + 1 then
+          love.graphics.printf(text, 0, (i + 4) * game.ui.height / 12, game.ui.width, "center")
+        end
       end
     end,
     function()
@@ -86,6 +90,33 @@ local function gamepadpressed(joystick, button)
   end
 end
 
+local function transitionToBlack()
+  showHighlighted = true
+  for i=1,3 do
+    local endTime = love.timer.getTime() + 1/6
+    while love.timer.getTime() < endTime do updateTransition:wait() end
+    showHighlighted = false
+    local endTime = love.timer.getTime() + 1/6
+    while love.timer.getTime() < endTime do updateTransition:wait() end
+    showHighlighted = true
+  end
+
+  local startFade = love.timer.getTime()
+  local fadeDuration = 1/4
+  local endFade = startFade + fadeDuration
+
+  local drawParent = love.draw
+  function love.draw()
+    drawParent()
+    love.graphics.origin()
+    love.graphics.setColor(0, 0, 0, (love.timer.getTime() - startFade) / fadeDuration * 255)
+    love.graphics.rectangle("fill", 0, 0, game.ui.width, game.ui.height)
+  end
+
+  while love.timer.getTime() < endFade do updateTransition:wait() end
+  love.draw = drawParent
+end
+
 function game.mainMenu.run()
   while true do
     love.update = update
@@ -97,8 +128,12 @@ function game.mainMenu.run()
     game.camera.setPosition(0, 0)
     music:play()
     local selection = select:wait()
+    love.gamepadpressed = nil
+    love.keypressed = nil
     if selection == "Play" then
       music:stop()
+      selectSound:play()
+      transitionToBlack()
       game.race.run()
     elseif selection == "Track Editor" then
       game.trackEditor.run()
