@@ -10,7 +10,6 @@ local selectSound = love.audio.newSource("sounds/collision.ogg")
 local options = {"Play", "Track Editor", "Quit"}
 local cursor = 0
 local select = game.event.new()
-local updateFlash = game.event.new()
 local showSelected = true
 
 local function update()
@@ -19,7 +18,6 @@ local function update()
   x = x + dt
   y = y + dt
   game.camera.setPosition(x, y)
-  updateFlash:send()
 end
 
 local function draw()
@@ -91,15 +89,9 @@ local function gamepadpressed(joystick, button)
 end
 
 local function flashSelection()
-  showSelected = true
-  for i=1,3 do
-    local endTime = love.timer.getTime() + 1/6
-    while love.timer.getTime() < endTime do updateFlash:wait() end
-    showSelected = false
-    local endTime = love.timer.getTime() + 1/6
-    while love.timer.getTime() < endTime do updateFlash:wait() end
-    showSelected = true
-  end
+  game.transitions.withTransition(1, function(progress)
+    showSelected = math.floor(progress * 6) % 2 == 0 and true or false
+  end)
 end
 
 function game.mainMenu.run()

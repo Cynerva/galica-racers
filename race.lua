@@ -1,7 +1,6 @@
 game.race = {}
 
 local done = game.event.new()
-local updateCountdown = game.event.new()
 
 local countdownBeepSound = love.audio.newSource("sounds/countdown-0.wav")
 local countdownEndSound = love.audio.newSource("sounds/countdown-1.wav")
@@ -9,7 +8,6 @@ local music = love.audio.newSource("music/race.ogg")
 music:setLooping(true)
 
 local function update()
-  updateCountdown:send()
   game.track.update()
   game.cars.update()
 end
@@ -47,7 +45,6 @@ local function draw()
 end
 
 local function transitionIn()
-  updateCountdown:clear()
   game.event.fork(function()
     game.cars.disableControls()
     game.transitions.fadeFromBlack()
@@ -55,10 +52,7 @@ local function transitionIn()
     while counter > 0 do
       countdownBeepSound:seek(0)
       countdownBeepSound:play()
-      local deadline = love.timer.getTime() + 1
-      while love.timer.getTime() < deadline do
-        updateCountdown:wait()
-      end
+      game.transitions.sleep(1)
       counter = counter - 1
     end
     countdownEndSound:play()
