@@ -2,7 +2,6 @@ game.race = {}
 
 local done = game.event.new()
 local updateCountdowns = game.event.new()
-local drawCountdowns = game.event.new()
 
 local countdownBeepSound = love.audio.newSource("sounds/countdown-0.wav")
 local countdownEndSound = love.audio.newSource("sounds/countdown-1.wav")
@@ -45,7 +44,6 @@ local function draw()
   game.camera.transform()
   game.track.draw()
   game.cars.draw()
-  drawCountdowns:send()
 end
 
 local function countdownToStart()
