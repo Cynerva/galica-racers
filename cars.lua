@@ -7,6 +7,7 @@ local function newCarImage(path)
 end
 
 local car = nil
+local controlsEnabled = true
 local images = {
   newCarImage("car-sprites/car4.png"),
   newCarImage("car-sprites/car3.png"),
@@ -32,6 +33,7 @@ function game.cars.withCars(f)
   local shape = love.physics.newRectangleShape(3, 1)
   local fixture = love.physics.newFixture(car.body, shape, 1)
   car.body:setLinearDamping(0.5)
+  controlsEnabled = true
   speedIntegral = 0
   engineSound:setVolume(1)
   engineSound:play()
@@ -39,35 +41,45 @@ function game.cars.withCars(f)
   engineSound:stop()
 end
 
+function game.cars.disableControls()
+  controlsEnabled = false
+end
+
+function game.cars.enableControls()
+  controlsEnabled = true
+end
+
 local function getControls()
   local controls = {}
   local accel = 0
   local turn = 0
-  for i,joystick in ipairs(love.joystick.getJoysticks()) do
-    accel = accel + (joystick:getAxis(6) + 1) / 2
-    accel = accel - (joystick:getAxis(3) + 1) / 2
-    turn = turn + joystick:getAxis(1)
-    if joystick:isGamepadDown("dpleft") then
+  if controlsEnabled then
+    for i,joystick in ipairs(love.joystick.getJoysticks()) do
+      accel = accel + (joystick:getAxis(6) + 1) / 2
+      accel = accel - (joystick:getAxis(3) + 1) / 2
+      turn = turn + joystick:getAxis(1)
+      if joystick:isGamepadDown("dpleft") then
+        turn = turn - 1
+      end
+      if joystick:isGamepadDown("dpright") then
+        turn = turn + 1
+      end
+    end
+    if love.keyboard.isDown("up") then
+      accel = accel + 1
+    end
+    if love.keyboard.isDown("down") then
+      accel = accel - 1
+    end
+    if love.keyboard.isDown("left") then
       turn = turn - 1
     end
-    if joystick:isGamepadDown("dpright") then
+    if love.keyboard.isDown("right") then
       turn = turn + 1
     end
+    accel = math.min(1, math.max(-1, accel))
+    turn = math.min(1, math.max(-1, turn))
   end
-  if love.keyboard.isDown("up") then
-    accel = accel + 1
-  end
-  if love.keyboard.isDown("down") then
-    accel = accel - 1
-  end
-  if love.keyboard.isDown("left") then
-    turn = turn - 1
-  end
-  if love.keyboard.isDown("right") then
-    turn = turn + 1
-  end
-  accel = math.min(1, math.max(-1, accel))
-  turn = math.min(1, math.max(-1, turn))
   controls.accel = accel
   controls.turn = turn
   return controls
