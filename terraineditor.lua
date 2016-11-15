@@ -19,9 +19,16 @@ local buttonDefs = {
   }
 }
 
-local function panelLayer(select, terrain)
+local function panelLayer(select, terrain, moveUp, moveDown)
   return function()
-    game.ui.splitHorizontal(2/3, select, terrain)
+    game.ui.split(7/8,
+      function()
+        game.ui.split(2/3, select, terrain)
+      end,
+      function()
+        game.ui.splitVertical(1/2, moveUp, moveDown)
+      end
+    )
   end
 end
 
@@ -63,11 +70,17 @@ local function mousepressed(x, y)
   local layers = {}
   for i=0,game.terrain.layerCount()-1 do
     table.insert(layers, panelLayer(
-      ifInBounds(function()
+      ifInBounds(function() -- select
         selectedLayer = i
       end),
-      ifInBounds(function()
+      ifInBounds(function() -- terrain
         game.terrain.cycleLayerTerrain(i)
+      end),
+      ifInBounds(function() -- moveUp
+        game.terrain.moveLayer(i, i - 1)
+      end),
+      ifInBounds(function() -- moveDown
+        game.terrain.moveLayer(i, i + 1)
       end)
     ))
   end
@@ -87,15 +100,21 @@ local function draw()
   local layers = {}
   for i=0,game.terrain.layerCount()-1 do
     table.insert(layers, panelLayer(
-      function()
+      function() -- select
         if i == selectedLayer then
           game.trackEditor.drawButton("Select", 192, 192, 192)
         else
           game.trackEditor.drawButton("Select", 128, 128, 128)
         end
       end,
-      function()
+      function() -- terrain
         game.trackEditor.drawButton(game.terrain.getLayerTerrainName(i), 96, 96, 96)
+      end,
+      function() -- moveUp
+        game.trackEditor.drawButton("Up", 128, 128, 128)
+      end,
+      function() -- moveDown
+        game.trackEditor.drawButton("Down", 128, 128, 128)
       end
     ))
   end

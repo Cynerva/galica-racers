@@ -102,6 +102,11 @@ local function setLayerTile(layer, x, y)
   layers[layer].map[x + y * width] = true
 end
 
+function game.terrain.moveLayer(layer, i)
+  if layer == 0 or i == 0 or i > #layers then return end
+  table.insert(layers, i, table.remove(layers, layer))
+end
+
 -- terrain persistence
 
 function game.terrain.reset()
