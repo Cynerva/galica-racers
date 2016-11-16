@@ -1,6 +1,7 @@
 game.terrainEditor = {}
 
 local selectedLayer = 0
+local deleteTarget = nil
 
 local buttonDefs = {
   {text="Add layer",
@@ -8,25 +9,17 @@ local buttonDefs = {
       game.terrain.addLayer()
       selectedLayer = game.terrain.layerCount() - 1
     end
-  },
-  {text="Remove layer",
-    click=function()
-      game.terrain.removeLayer()
-      if selectedLayer >= game.terrain.layerCount() then
-        selectedLayer = game.terrain.layerCount() - 1
-      end
-    end
   }
 }
 
-local function panelLayer(select, terrain, moveUp, moveDown)
+local function panelLayer(select, terrain, moveUp, moveDown, delete)
   return function()
     game.ui.split(7/8,
       function()
         game.ui.split(2/3, select, terrain)
       end,
       function()
-        game.ui.splitVertical(1/2, moveUp, moveDown)
+        game.ui.stackVertical(delete, moveUp, moveDown)
       end
     )
   end
@@ -34,7 +27,7 @@ end
 
 local function panelUI(layers, buttons)
   return function()
-    game.ui.split(2/3,
+    game.ui.split(3/4,
       function()
         game.ui.stackVertical(unpack(layers))
       end,
@@ -81,6 +74,18 @@ local function mousepressed(x, y)
       end),
       ifInBounds(function() -- moveDown
         game.terrain.moveLayer(i, i + 1)
+      end),
+      ifInBounds(function() -- delete
+        if deleteTarget == i then
+          game.terrain.removeLayer(i)
+          deleteTarget = nil
+        else
+          deleteTarget = i
+          game.event.fork(function()
+            game.transitions.sleep(1)
+            deleteTarget = nil
+          end)
+        end
       end)
     ))
   end
@@ -115,6 +120,13 @@ local function draw()
       end,
       function() -- moveDown
         game.trackEditor.drawButton("Down", 128, 128, 128)
+      end,
+      function() -- delete
+        if deleteTarget == i then
+          game.trackEditor.drawButton("!", 255, 0, 0)
+        else
+          game.trackEditor.drawButton("X", 192, 128, 128)
+        end
       end
     ))
   end
@@ -135,4 +147,5 @@ function game.terrainEditor.start()
   love.draw = draw
   love.mousepressed = mousepressed
   selectedLayer = 0
+  deleteTarget = nil
 end
