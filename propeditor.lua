@@ -2,6 +2,19 @@ game.propEditor = {}
 
 local currentType = 0
 
+local buttons = {
+  {text="Next",
+    click=function()
+      currentType = (currentType + 1) % game.props.numTypes()
+    end
+  },
+  {text="Previous",
+    click=function()
+      currentType = (currentType - 1) % game.props.numTypes()
+    end
+  }
+}
+
 local function update()
   game.trackEditor.update()
   if love.mouse.isDown(2) then
@@ -15,6 +28,17 @@ local function update()
   end
 end
 
+local function forEachButtonInUI(f)
+  local buttonProcs = {}
+  for _,button in ipairs(buttons) do
+    local function buttonProc()
+      f(button)
+    end
+    table.insert(buttonProcs, buttonProc)
+  end
+  game.ui.stackVertical(unpack(buttonProcs))
+end
+
 local function mousepressed(x, y, button)
   if button ~= 1 then return end
   game.trackEditor.inUI {
@@ -26,19 +50,25 @@ local function mousepressed(x, y, button)
     panelHeader=function()
       if not game.ui.inBounds(x, y) then return end
       game.spawnEditor.start()
+    end,
+    panel=function()
+      forEachButtonInUI(function(button)
+        if not game.ui.inBounds(x, y) then return end
+        button.click()
+      end)
     end
   }
 end
 
-local function keypressed(key)
-  game.trackEditor.keypressed(key)
-  if key == "tab" then
-    currentType = (currentType + 1) % game.props.numTypes()
-  end
-end
-
 local function draw()
   game.trackEditor.draw("Props", function() end)
+  game.trackEditor.inUI {
+    panel=function()
+      forEachButtonInUI(function(button)
+        game.trackEditor.drawButton(button.text, 128, 128, 192)
+      end)
+    end
+  }
   game.trackEditor.inUI {
     track=function()
       game.camera.transform()
@@ -51,6 +81,6 @@ end
 function game.propEditor.start()
   love.update = update
   love.mousepressed = mousepressed
-  love.keypressed = keypressed
+  love.keypressed = nil
   love.draw = draw
 end
