@@ -9,34 +9,34 @@ local function newProp(imagePath, getShape)
   return {image=image, getShape=getShape}
 end
 
-local propScale = 4
+local propScale = 4 / 64
 
 local propTypes = {
   newProp("props/boulder.png", function()
-    return love.physics.newRectangleShape(propScale, propScale)
+    return love.physics.newRectangleShape(propScale * 64, propScale * 64)
   end),
   newProp("props/wall-left.png", function()
-    return love.physics.newRectangleShape(propScale, propScale)
+    return love.physics.newRectangleShape(propScale * 64, propScale * 64)
   end),
   newProp("props/wall-mid-h.png", function()
-    return love.physics.newRectangleShape(propScale, propScale)
+    return love.physics.newRectangleShape(propScale * 64, propScale * 64)
   end),
   newProp("props/wall-right.png", function()
-    return love.physics.newRectangleShape(propScale, propScale)
+    return love.physics.newRectangleShape(propScale * 64, propScale * 64)
   end),
   newProp("props/wall-top.png", function()
-    return love.physics.newRectangleShape(propScale, propScale)
+    return love.physics.newRectangleShape(propScale * 64, propScale * 64)
   end),
   newProp("props/wall-mid-v.png", function()
-    return love.physics.newRectangleShape(propScale, propScale)
+    return love.physics.newRectangleShape(propScale * 64, propScale * 64)
   end),
   newProp("props/wall-bottom.png", function()
-    return love.physics.newRectangleShape(propScale, propScale)
+    return love.physics.newRectangleShape(propScale * 64, propScale * 64)
   end),
   newProp("props/checkpoint-h.png"),
   newProp("props/checkpoint-v.png"),
   newProp("props/checkpoint-post.png", function()
-    return love.physics.newRectangleShape(propScale / 8, propScale / 4)
+    return love.physics.newRectangleShape(propScale * 8, propScale * 16)
   end)
 }
 
@@ -50,7 +50,7 @@ end
 
 function game.props.getPropSize(i)
   local image = getPropType(i).image
-  return image:getWidth() * propScale / 64, image:getHeight() * propScale / 64
+  return image:getWidth() * propScale, image:getHeight() * propScale
 end
 
 -- active props
@@ -72,8 +72,8 @@ function game.props.eraseProps(x, y)
   for i=#props,1,-1 do
     local prop = props[i]
     local image = getPropType(prop.type).image
-    local width = image:getWidth() * propScale / 64
-    local height = image:getHeight() * propScale / 64
+    local width = image:getWidth() * propScale
+    local height = image:getHeight() * propScale
     local x0 = prop.x - width / 2
     local y0 = prop.y - height / 2
     local x1 = prop.x + width / 2
@@ -140,7 +140,7 @@ function game.props.drawProp(x, y, type)
   love.graphics.draw(image,
     x, y, -- pos
     0, -- angle
-    propScale / 64, propScale / 64, -- scale
+    propScale, propScale, -- scale
     image:getWidth() / 2, image:getHeight() / 2 -- origin
   )
 end
