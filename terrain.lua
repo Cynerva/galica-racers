@@ -182,18 +182,34 @@ function game.terrain.cycleLayerTerrain(layer)
   setLayerTerrain(layer, (terrain + 1) % #terrains)
 end
 
-function game.terrain.paint(layer, x, y)
-  local tileX, tileY = worldToTile(x, y)
-  tileX = math.floor(tileX)
-  tileY = math.floor(tileY)
-  setLayerTile(layer, tileX, tileY)
+function game.terrain.paint(layer, brushSize, x, y)
+  local centerX, centerY = worldToTile(x, y)
+  centerX = math.floor(centerX)
+  centerY = math.floor(centerY)
+  brushSize = math.floor(brushSize / tileSize)
+  for tileY=centerY - brushSize, centerY + brushSize do
+    for tileX=centerX - brushSize, centerX + brushSize do
+      local r = math.sqrt((tileX - centerX) ^ 2 + (tileY - centerY) ^ 2)
+      if r <= brushSize then
+        setLayerTile(layer, tileX, tileY)
+      end
+    end
+  end
 end
 
-function game.terrain.erase(layer, x, y)
-  local tileX, tileY = worldToTile(x, y)
-  tileX = math.floor(tileX)
-  tileY = math.floor(tileY)
-  clearLayerTile(layer, tileX, tileY)
+function game.terrain.erase(layer, brushSize, x, y)
+  local centerX, centerY = worldToTile(x, y)
+  centerX = math.floor(centerX)
+  centerY = math.floor(centerY)
+  brushSize = math.floor(brushSize / tileSize)
+  for tileY=centerY - brushSize, centerY + brushSize do
+    for tileX=centerX - brushSize, centerX + brushSize do
+      local r = math.sqrt((tileX - centerX) ^ 2 + (tileY - centerY) ^ 2)
+      if r <= brushSize then
+        clearLayerTile(layer, tileX, tileY)
+      end
+    end
+  end
 end
 
 function game.terrain.layerCount()

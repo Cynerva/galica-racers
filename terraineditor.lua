@@ -1,7 +1,8 @@
 game.terrainEditor = {}
 
-local selectedLayer = 0
+local selectedLayer = nil
 local deleteTarget = nil
+local brushSize = nil
 
 local buttonDefs = {
   {text="Add layer",
@@ -45,9 +46,9 @@ local function update()
     track=function()
       if not game.ui.inBounds(x, y) then return end
       if love.mouse.isDown(1) then
-        game.terrain.paint(selectedLayer, game.camera.screenToWorld(x, y))
+        game.terrain.paint(selectedLayer, brushSize, game.camera.screenToWorld(x, y))
       elseif love.mouse.isDown(2) then
-        game.terrain.erase(selectedLayer, game.camera.screenToWorld(x, y))
+        game.terrain.erase(selectedLayer, brushSize, game.camera.screenToWorld(x, y))
       end
     end
   }
@@ -101,6 +102,10 @@ local function mousepressed(x, y)
   }
 end
 
+local function wheelmoved(x, y)
+  brushSize = math.max(1, brushSize + y)
+end
+
 local function draw()
   local layers = {}
   for i=0,game.terrain.layerCount()-1 do
@@ -139,13 +144,23 @@ local function draw()
   end
 
   game.trackEditor.draw("Terrain", panelUI(layers, buttons))
+  game.trackEditor.inUI {
+    track=function()
+      game.camera.transform()
+      local x, y = game.camera.screenToWorld(love.mouse.getPosition())
+      game.debug.wireBrush()
+      love.graphics.circle("line", x, y, brushSize)
+    end
+  }
 end
 
 function game.terrainEditor.start()
+  selectedLayer = 0
+  deleteTarget = nil
+  brushSize = 1
   love.keypressed = game.trackEditor.keypressed
   love.update = update
   love.draw = draw
   love.mousepressed = mousepressed
-  selectedLayer = 0
-  deleteTarget = nil
+  love.wheelmoved = wheelmoved
 end
