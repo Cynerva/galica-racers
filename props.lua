@@ -48,11 +48,19 @@ function game.props.numTypes()
   return #propTypes
 end
 
+function game.props.getPropSize(i)
+  local image = getPropType(i).image
+  return image:getWidth() * propScale / 64, image:getHeight() * propScale / 64
+end
+
 -- active props
 
 local props = nil
 
 function game.props.addProp(x, y, propType)
+  for i,prop in ipairs(props) do
+    if prop.x == x and prop.y == y and prop.type == propType then return end
+  end
   local prop = {}
   prop.x = x
   prop.y = y

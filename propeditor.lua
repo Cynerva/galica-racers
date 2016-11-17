@@ -1,6 +1,8 @@
 game.propEditor = {}
 
 local currentType = 0
+local anchorX = nil
+local anchorY = nil
 
 local buttons = {
   {text="Next",
@@ -17,7 +19,17 @@ local buttons = {
 
 local function update()
   game.trackEditor.update()
-  if love.mouse.isDown(2) then
+  if love.mouse.isDown(1) and anchorX ~= nil and anchorY ~= nil then
+    game.trackEditor.inUI {
+      track=function()
+        local x, y = game.camera.screenToWorld(love.mouse.getPosition())
+        local w, h = game.props.getPropSize(currentType)
+        x = math.floor((x - anchorX) / w + 0.5) * w + anchorX
+        y = math.floor((y - anchorY) / h + 0.5) * h + anchorY
+        game.props.addProp(x, y, currentType)
+      end
+    }
+  elseif love.mouse.isDown(2) then
     local x, y = love.mouse.getPosition()
     game.trackEditor.inUI {
       track=function()
@@ -44,8 +56,7 @@ local function mousepressed(x, y, button)
   game.trackEditor.inUI {
     track=function()
       if not game.ui.inBounds(x, y) then return end
-      local x, y = game.camera.screenToWorld(x, y)
-      game.props.addProp(x, y, currentType)
+      anchorX, anchorY = game.camera.screenToWorld(x, y)
     end,
     panelHeader=function()
       if not game.ui.inBounds(x, y) then return end
@@ -58,6 +69,11 @@ local function mousepressed(x, y, button)
       end)
     end
   }
+end
+
+local function mousereleased()
+  anchorX = nil
+  anchorY = nil
 end
 
 local function draw()
@@ -79,8 +95,12 @@ local function draw()
 end
 
 function game.propEditor.start()
+  currentType = 0
+  anchorX = nil
+  anchorY = nil
   love.update = update
   love.mousepressed = mousepressed
+  love.mousereleased = mousereleased
   love.keypressed = nil
   love.draw = draw
 end
