@@ -61,8 +61,25 @@ local function transitionIn()
   end)
 end
 
+local function transitionToFinish()
+  local drawParent = draw
+  game.transitions.withTransition(1, function(progress)
+    function love.draw()
+      love.graphics.push()
+      drawParent()
+      love.graphics.pop()
+      love.graphics.setColor(255, 255, 255)
+      progress = ((progress * 2 - 1) ^ 3 + 1) / 2
+      love.graphics.print("Finish!", (1 - progress) * game.ui.width, game.ui.height / 2)
+    end
+  end)
+  game.transitions.fadeToBlack(192)
+  love.draw = drawParent
+end
+
 local function raceFinish(lapTimes, totalTime)
   game.cars.disableControls()
+  transitionToFinish()
   function love.draw()
     love.graphics.push()
     draw()

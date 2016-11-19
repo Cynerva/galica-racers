@@ -36,13 +36,14 @@ function game.transitions.sleep(duration)
   end)
 end
 
-function game.transitions.fadeToBlack()
+function game.transitions.fadeToBlack(limit)
+  limit = limit or 255
   local drawParent = love.draw
   local progress = 0
   function love.draw()
     drawParent()
     love.graphics.origin()
-    love.graphics.setColor(0, 0, 0, progress * 255)
+    love.graphics.setColor(0, 0, 0, progress * limit)
     love.graphics.rectangle("fill", 0, 0, game.ui.width, game.ui.height)
   end
 
