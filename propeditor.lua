@@ -101,6 +101,6 @@ function game.propEditor.start()
   love.update = update
   love.mousepressed = mousepressed
   love.mousereleased = mousereleased
-  love.keypressed = nil
+  love.keypressed = game.trackEditor.keypressed
   love.draw = draw
 end
