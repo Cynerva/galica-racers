@@ -69,7 +69,9 @@ function game.race.run()
   game.track.load()
   game.track.addPhysics()
   game.event.fork(function()
-    game.waypoints.finishedLap:wait()
+    for lap=1,3 do
+      game.waypoints.finishedLap:wait()
+    end
     done:send()
   end)
   game.cars.withCars(function()
