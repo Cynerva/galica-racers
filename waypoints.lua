@@ -13,11 +13,7 @@ end
 function game.waypoints.reset()
   waypoints = {}
   nextWaypoint = 1
-  --[[ debug stuffs
-  game.waypoints.add(4, 4, 8, 4)
-  game.waypoints.add(4, 8, 4, 12)
-  game.waypoints.add(12, 12, 16, 16)
-  --]]
+  game.waypoints.finishedLap:clear()
 end
 
 function game.waypoints.read(f)

@@ -61,6 +61,28 @@ local function transitionIn()
   end)
 end
 
+local function raceFinish(lapTimes, totalTime)
+  game.cars.disableControls()
+  function love.draw()
+    love.graphics.push()
+    draw()
+    love.graphics.pop()
+    love.graphics.setColor(0, 0, 0, 192)
+    love.graphics.rectangle("fill", 0, 0, game.ui.width, game.ui.height)
+    love.graphics.setColor(255, 255, 255)
+    for lap=1,#lapTimes do
+      love.graphics.printf("Lap " .. lap .. ": " .. lapTimes[lap], 0, lap * 50, game.ui.width, "center")
+    end
+    love.graphics.printf("Total: " .. totalTime, 0, 200, game.ui.width, "center")
+  end
+  function love.keypressed()
+    done:send()
+  end
+  function love.gamepadpressed()
+    done:send()
+  end
+end
+
 function game.race.run()
   love.update = update
   love.keypressed = keypressed
@@ -68,15 +90,20 @@ function game.race.run()
   love.draw = draw
   game.track.load()
   game.track.addPhysics()
-  game.event.fork(function()
-    for lap=1,3 do
-      game.waypoints.finishedLap:wait()
-    end
-    done:send()
-  end)
   game.cars.withCars(function()
     game.camera.followCar()
-    transitionIn()
+    game.event.fork(function()
+      transitionIn()
+      local lapTimes = {}
+      local startTime = love.timer.getTime()
+      for lap=1,3 do
+        local lapStartTime = love.timer.getTime()
+        game.waypoints.finishedLap:wait()
+        table.insert(lapTimes, love.timer.getTime() - lapStartTime)
+      end
+      local totalTime = love.timer.getTime() - startTime
+      raceFinish(lapTimes, totalTime)
+    end)
     done:wait()
   end)
   music:stop()
