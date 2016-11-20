@@ -4,6 +4,7 @@ local done = game.event.new()
 
 local startTime = nil
 local endTime = nil
+local currentLap = nil
 
 local countdownBeepSound = love.audio.newSource("sounds/countdown-0.wav")
 local countdownEndSound = love.audio.newSource("sounds/countdown-1.wav")
@@ -49,12 +50,16 @@ local function formatTime(time)
   return formattedTime
 end
 
-local function drawTimer()
+local function drawTimeIndicator()
   local endTime = endTime or love.timer.getTime()
   local startTime = startTime or endTime
   local raceTime = endTime - startTime
   local formattedTime = formatTime(raceTime)
-  love.graphics.print(formattedTime, game.ui.width - 80, 16)
+  love.graphics.printf(formattedTime, -16, 16, game.ui.width, "right")
+end
+
+local function drawLapIndicator()
+  love.graphics.print("Lap " .. currentLap .. " / 3", 16, 16)
 end
 
 local function draw()
@@ -63,7 +68,8 @@ local function draw()
   game.track.draw()
   game.cars.draw()
   love.graphics.pop()
-  drawTimer()
+  drawTimeIndicator()
+  drawLapIndicator()
 end
 
 local function transitionIn()
@@ -121,6 +127,7 @@ end
 function game.race.run()
   startTime = nil
   endTime = nil
+  currentLap = 1
   love.update = update
   love.keypressed = keypressed
   love.gamepadpressed = gamepadpressed
@@ -134,6 +141,7 @@ function game.race.run()
       startTime = love.timer.getTime()
       local lapTimes = {}
       for lap=1,3 do
+        currentLap = lap
         local lapStartTime = love.timer.getTime()
         game.waypoints.finishedLap:wait()
         table.insert(lapTimes, love.timer.getTime() - lapStartTime)
