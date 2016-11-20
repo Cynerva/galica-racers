@@ -26,6 +26,7 @@ function game.transitions.withTransition(duration, f)
       update:wait()
     end
     f(1)
+    update:wait() -- additional wait to make transitions end smoothly
   end)
 end
 
