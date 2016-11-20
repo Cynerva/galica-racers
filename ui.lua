@@ -5,9 +5,17 @@ game.ui.y = 0
 game.ui.width = love.graphics.getWidth()
 game.ui.height = love.graphics.getHeight()
 
+function updateFont()
+  local size = (game.ui.width + game.ui.height) * 0.01
+  local font = love.graphics.newFont(size)
+  love.graphics.setFont(font)
+end
+updateFont()
+
 function love.resize(w, h)
   game.ui.width = w
   game.ui.height = h
+  updateFont()
 end
 
 local function inSubregion(x, y, w, h, f)
