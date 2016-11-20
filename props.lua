@@ -147,7 +147,18 @@ end
 
 function game.props.draw()
   love.graphics.setColor(255, 255, 255)
+  -- bounds checking for performance
+  -- Ideally we should not have to iterate over every freaking prop, but I
+  -- want to put off reasonable space partitioning, so this will do
+  local minX, minY = game.camera.screenToWorld(0, 0)
+  local maxX, maxY = game.camera.screenToWorld(game.ui.width, game.ui.height)
+  minX = minX - propScale * 64 / 2
+  maxX = maxX + propScale * 64 / 2
+  minY = minY - propScale * 64 / 2
+  maxY = maxY + propScale * 64 / 2
   for _,prop in ipairs(props) do
-    game.props.drawProp(prop.x, prop.y, prop.type)
+    if prop.x >= minX and prop.x < maxX and prop.y >= minY and prop.y < maxY then
+      game.props.drawProp(prop.x, prop.y, prop.type)
+    end
   end
 end

@@ -87,9 +87,8 @@ local function setLayerTerrain(layer, terrain)
 end
 
 local function getLayerTile(layer, x, y)
-  if layer == 0 then return true end
-  if outOfBounds(x, y) then return false end
-  return layers[layer].map[x + y * width]
+  -- slightly optimized
+  return layer == 0 or layers[layer].map[x + y * width] or false
 end
 
 local function clearLayerTile(layer, x, y)
