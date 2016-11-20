@@ -52,7 +52,7 @@ function game.transitions.fadeToBlack(limit)
     progress = p
   end)
 
-  draw = drawParent
+  love.draw = drawParent
 end
 
 function game.transitions.fadeFromBlack()
@@ -69,5 +69,5 @@ function game.transitions.fadeFromBlack()
     progress = p
   end)
 
-  draw = drawParent
+  love.draw = drawParent
 end

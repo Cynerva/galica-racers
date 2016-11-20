@@ -43,3 +43,11 @@ function game.debug.drawPhysicsWorld(world)
     game.debug.drawPhysicsBody(body)
   end
 end
+
+function game.debug.profile(f)
+  local ProFi = require("ProFi")
+  ProFi:start()
+  f()
+  ProFi:stop()
+  ProFi:writeReport("profile.txt")
+end
