@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eux
+
+cd game
+zip -9 -r ../galica-racers.love .
