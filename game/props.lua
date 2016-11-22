@@ -86,23 +86,6 @@ end
 
 function game.props.reset()
   props = {}
-  --[[ boulders
-  game.props.addProp(10, 10, 0)
-  game.props.addProp(15, 10, 0)
-  game.props.addProp(10, 15, 0)
-  -- h wall
-  game.props.addProp(10, 30, 1)
-  game.props.addProp(15, 30, 2)
-  game.props.addProp(20, 30, 3)
-  -- v wall
-  game.props.addProp(30, 10, 4)
-  game.props.addProp(30, 15, 5)
-  game.props.addProp(30, 20, 6)
-  -- checkpoint
-  game.props.addProp(40, 10, 7)
-  game.props.addProp(40, 15, 8)
-  game.props.addProp(40, 20, 9)
-  --]]
 end
 
 function game.props.read(f)
