@@ -89,14 +89,6 @@ end
 
 local function transitionToFinish()
   local drawParent = draw
-  game.transitions.withTransition(1, function(progress)
-    function love.draw()
-      drawParent()
-      love.graphics.setColor(255, 255, 255)
-      progress = ((progress * 2 - 1) ^ 3 + 1) / 2
-      love.graphics.print("Finish!", (1 - progress) * game.ui.width, game.ui.height / 2)
-    end
-  end)
   game.transitions.fadeToBlack(192)
   love.draw = drawParent
 end
@@ -111,10 +103,20 @@ local function raceFinish(lapTimes)
     love.graphics.setColor(255, 255, 255)
     for lap=1,#lapTimes do
       local formattedTime = formatTime(lapTimes[lap])
-      love.graphics.printf("Lap " .. lap .. ": " .. formattedTime, 0, lap * 50, game.ui.width, "center")
+      love.graphics.printf(
+        "Lap " .. lap .. ": " .. formattedTime,
+        0,
+        game.ui.height / 2 + (lap - 2.5) * 50,
+        game.ui.width, "center"
+      )
     end
     local formattedTotalTime = formatTime(endTime - startTime)
-    love.graphics.printf("Total: " .. formattedTotalTime, 0, 200, game.ui.width, "center")
+    love.graphics.printf(
+        "Total: " .. formattedTotalTime,
+        0,
+        game.ui.height / 2 + 2.5 * 50,
+        game.ui.width, "center"
+      )
   end
   function love.keypressed()
     done:send()
