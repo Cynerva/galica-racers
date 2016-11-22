@@ -1,6 +1,7 @@
 game = {}
 
-love.filesystem.setIdentity("galica-racer")
+love.filesystem.setIdentity("galica-racers")
+love.window.setTitle("Galica Racers")
 
 require("debugtools")
 require("event")
