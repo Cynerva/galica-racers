@@ -6,8 +6,8 @@ local startTime = nil
 local endTime = nil
 local currentLap = nil
 
-local countdownBeepSound = love.audio.newSource("sounds/countdown-0.wav")
-local countdownEndSound = love.audio.newSource("sounds/countdown-1.wav")
+local countdownBeepSound = love.audio.newSource("sounds/countdown-0.ogg")
+local countdownEndSound = love.audio.newSource("sounds/countdown-1.ogg")
 local music = love.audio.newSource("music/race.ogg")
 music:setLooping(true)
 

@@ -1,5 +1,7 @@
 game = {}
 
+love.filesystem.setIdentity("galica-racer")
+
 require("debugtools")
 require("event")
 require("files")

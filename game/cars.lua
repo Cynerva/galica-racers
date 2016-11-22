@@ -120,7 +120,7 @@ function game.cars.draw()
     0.075, 0.075, -- scale
     image:getWidth() / 2, image:getHeight() / 2 -- origin
   )
-  game.debug.wireBrush()
+  --game.debug.wireBrush()
   --game.debug.drawPhysicsBody(car.body)
 end
 
