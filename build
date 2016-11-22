@@ -1,5 +1,22 @@
 #!/bin/sh
 set -eux
 
+target=$(pwd)
+
 cd game
-zip -9 -r ../galica-racers.love .
+zip -9 -r $target/galica-racers.love .
+
+echo Building windows package
+tmp=/tmp/galica-racers-build-win64
+rm -rf $tmp
+mkdir $tmp
+cd $tmp
+wget https://bitbucket.org/rude/love/downloads/love-0.10.2-win64.zip
+unzip love-0.10.2-win64.zip
+mv love-0.10.2-win64 galica-racers
+cd galica-racers
+cat love.exe $target/galica-racers.love > galica-racers.exe
+rm changes.txt game.ico love.exe love.ico lovec.exe readme.txt
+cd ..
+zip -9 -r $target/galica-racers-win64.zip galica-racers
+rm -rf $tmp
