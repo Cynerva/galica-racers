@@ -225,7 +225,27 @@ function game.terrain.draw()
   maxX = math.floor(maxX) + 1
   maxY = math.floor(maxY) + 1
   love.graphics.setColor(255, 255, 255)
-  for layer=0,game.terrain.layerCount()-1 do
+  -- draw base layer
+  local terrain = getTerrain(getLayerTerrain(0))
+  local scaleX = tileSize / terrain.width
+  local scaleY = tileSize / terrain.height
+  for y=minY,maxY do
+    for x=minX,maxX do
+      local worldX, worldY = tileToWorld(x, y)
+      love.graphics.draw(terrain.image,
+        worldX, worldY, -- pos
+        0, -- angle
+        scaleX, scaleY, -- scale
+        terrain.originX, terrain.originY -- origin
+      )
+    end
+  end
+  -- draw remaining layers
+  minX = math.max(0, minX)
+  maxX = math.min(width - 1, maxX)
+  minY = math.max(0, minY)
+  maxY = math.min(height - 1, maxY)
+  for layer=1,game.terrain.layerCount()-1 do
     local terrain = getTerrain(getLayerTerrain(layer))
     local scaleX = tileSize / terrain.width
     local scaleY = tileSize / terrain.height
