@@ -80,6 +80,7 @@ local function mousepressed(x, y)
         if deleteTarget == i then
           game.terrain.removeLayer(i)
           deleteTarget = nil
+          selectedLayer = math.min(selectedLayer, game.terrain.layerCount() - 1)
         else
           deleteTarget = i
           game.event.fork(function()

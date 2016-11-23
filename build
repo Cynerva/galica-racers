@@ -13,10 +13,9 @@ mkdir $tmp
 cd $tmp
 wget https://bitbucket.org/rude/love/downloads/love-0.10.2-win64.zip
 unzip love-0.10.2-win64.zip
-mv love-0.10.2-win64 galica-racers
-cd galica-racers
+mv love-0.10.2-win64 galica-racers-win64
+cd galica-racers-win64
 cat love.exe $target/galica-racers.love > galica-racers.exe
 rm changes.txt game.ico love.exe love.ico lovec.exe readme.txt
-cd ..
-zip -9 -r $target/galica-racers-win64.zip galica-racers
+zip -9 -r $target/galica-racers-win64.zip .
 rm -rf $tmp
