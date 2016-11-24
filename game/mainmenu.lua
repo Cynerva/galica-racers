@@ -7,7 +7,11 @@ local music = love.audio.newSource("music/menu.ogg")
 music:setLooping(true)
 local selectSound = love.audio.newSource("sounds/collision.ogg")
 
-local options = {"Play", "Track Editor", "Quit"}
+local options = {
+  "Play",
+  --"Track Editor",
+  "Quit"
+}
 local cursor = 0
 local select = game.event.new()
 local showSelected = true
