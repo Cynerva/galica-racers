@@ -49,15 +49,26 @@ function game.cars.enableControls()
   controlsEnabled = true
 end
 
+function getAxisWithDeadzone(joystick, axis)
+  local deadzone = 3/16
+  local value = joystick:getAxis(axis)
+  if value >= 0 then
+    value = math.max(0, value * (1 + deadzone) - deadzone)
+  else
+    value = math.min(0, value * (1 + deadzone) + deadzone)
+  end
+  return value
+end
+
 local function getControls()
   local controls = {}
   local accel = 0
   local turn = 0
   if controlsEnabled then
     for i,joystick in ipairs(love.joystick.getJoysticks()) do
-      accel = accel + (joystick:getAxis(6) + 1) / 2
-      accel = accel - (joystick:getAxis(3) + 1) / 2
-      turn = turn + joystick:getAxis(1)
+      accel = accel + (joystick:getAxis(6) + 1) * 0.5
+      accel = accel - (joystick:getAxis(3) + 1) * 0.5
+      turn = turn + getAxisWithDeadzone(joystick, 1)
       if joystick:isGamepadDown("dpleft") then
         turn = turn - 1
       end
