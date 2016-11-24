@@ -19,8 +19,8 @@ end
 
 function game.track.load()
   game.track.reset()
-  if love.filesystem.exists("track") then
-    local f = love.filesystem.newFile("track")
+  if love.filesystem.exists("track.dat") then
+    local f = love.filesystem.newFile("track.dat")
     f:open("r")
     spawnX = game.files.readNum(f)
     spawnY = game.files.readNum(f)
@@ -32,7 +32,7 @@ function game.track.load()
 end
 
 function game.track.save()
-  local f = love.filesystem.newFile("track")
+  local f = love.filesystem.newFile("track.dat")
   f:open("w")
   game.files.writeNum(f, spawnX)
   game.files.writeNum(f, spawnY)
